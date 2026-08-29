@@ -3,22 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>เกมจับคู่ธงชาติ</title>
+  <title>Kiddo Playhouse</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700&family=Noto+Sans+Thai:wght@400;700&display=swap');
 
     :root {
-      --bg-top: #d9f3ff;
-      --bg-bottom: #fff6dd;
-      --panel: rgba(255, 255, 255, 0.88);
-      --panel-border: #1f4e5f;
-      --accent: #ff8a5b;
-      --accent-strong: #ff5f2e;
-      --secondary: #3a86ff;
-      --success: #22a06b;
-      --text: #163240;
-      --muted: #5f7480;
-      --shadow: 0 18px 40px rgba(20, 60, 90, 0.16);
+      --sky: #dff6ff;
+      --sand: #fff4d6;
+      --cloud: rgba(255, 255, 255, 0.9);
+      --panel: rgba(255, 255, 255, 0.9);
+      --ink: #163340;
+      --muted: #607682;
+      --coral: #ff8c64;
+      --coral-strong: #ff6231;
+      --blue: #3a86ff;
+      --blue-soft: rgba(58, 134, 255, 0.12);
+      --green: #22a06b;
+      --yellow: #ffd166;
+      --pink: #ff7aa2;
+      --border: rgba(22, 51, 64, 0.1);
+      --shadow: 0 20px 42px rgba(20, 60, 90, 0.14);
     }
 
     * {
@@ -29,182 +33,384 @@
       margin: 0;
       min-height: 100vh;
       font-family: 'Baloo 2', 'Noto Sans Thai', sans-serif;
-      color: var(--text);
+      color: var(--ink);
       background:
-        radial-gradient(circle at top left, rgba(255, 255, 255, 0.9), transparent 32%),
-        radial-gradient(circle at bottom right, rgba(255, 206, 109, 0.45), transparent 28%),
-        linear-gradient(180deg, var(--bg-top), var(--bg-bottom));
+        radial-gradient(circle at 10% 15%, rgba(255, 255, 255, 0.95), transparent 28%),
+        radial-gradient(circle at 88% 18%, rgba(255, 209, 102, 0.42), transparent 24%),
+        radial-gradient(circle at 12% 88%, rgba(255, 122, 162, 0.15), transparent 20%),
+        linear-gradient(180deg, var(--sky), var(--sand));
     }
 
     body::before,
     body::after {
       content: "";
       position: fixed;
-      inset: auto;
-      width: 220px;
-      height: 220px;
-      border-radius: 50%;
-      opacity: 0.22;
-      z-index: 0;
+      border-radius: 999px;
       pointer-events: none;
-      filter: blur(3px);
+      z-index: 0;
+      background: var(--cloud);
+      opacity: 0.55;
+      filter: blur(1px);
     }
 
     body::before {
-      top: 30px;
-      right: 5vw;
-      background: #8ed1fc;
+      top: 48px;
+      left: 7vw;
+      width: 170px;
+      height: 58px;
+      box-shadow: 46px 16px 0 8px rgba(255, 255, 255, 0.74);
     }
 
     body::after {
-      left: -80px;
-      bottom: 60px;
-      background: #ffcb77;
+      top: 92px;
+      right: 9vw;
+      width: 138px;
+      height: 48px;
+      box-shadow: -40px 12px 0 4px rgba(255, 255, 255, 0.66);
     }
 
-    .app {
+    .app-shell {
       position: relative;
       z-index: 1;
-      width: min(1120px, calc(100% - 24px));
-      margin: 24px auto;
-      padding: 20px;
-      border-radius: 28px;
+      width: min(1150px, calc(100% - 20px));
+      margin: 16px auto;
+      padding: 18px;
+      border-radius: 32px;
       background: var(--panel);
-      border: 3px solid rgba(31, 78, 95, 0.12);
+      border: 3px solid rgba(255, 255, 255, 0.66);
       box-shadow: var(--shadow);
-      backdrop-filter: blur(8px);
+      backdrop-filter: blur(10px);
     }
 
-    .hero {
-      display: grid;
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       gap: 12px;
-      margin-bottom: 16px;
-      text-align: center;
+      margin-bottom: 14px;
     }
 
-    .hero h1 {
-      margin: 0;
-      font-size: clamp(2rem, 4vw, 3.1rem);
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-badge {
+      width: 58px;
+      height: 58px;
+      display: grid;
+      place-items: center;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #fff7b3, #ffd166);
+      box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.65);
+      font-size: 1.8rem;
+    }
+
+    .brand-copy strong,
+    .brand-copy span {
+      display: block;
+    }
+
+    .brand-copy strong {
+      font-size: 1.5rem;
       line-height: 1;
     }
 
-    .hero p {
-      margin: 0;
+    .brand-copy span {
       font-family: 'Noto Sans Thai', sans-serif;
-      font-size: 1rem;
       color: var(--muted);
+      font-size: 0.95rem;
     }
 
-    .toolbar {
+    .nav-actions {
       display: flex;
+      align-items: center;
+      gap: 10px;
       flex-wrap: wrap;
-      justify-content: center;
-      gap: 12px;
-      margin-bottom: 16px;
     }
 
-    .pill,
     button {
       border: 0;
       border-radius: 999px;
-      padding: 10px 16px;
+      padding: 11px 16px;
       font: inherit;
-    }
-
-    .pill {
-      background: rgba(58, 134, 255, 0.12);
-      color: var(--text);
-      font-family: 'Noto Sans Thai', sans-serif;
-    }
-
-    button {
       cursor: pointer;
       color: white;
-      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-      box-shadow: 0 10px 22px rgba(255, 95, 46, 0.28);
-      transition: transform 0.16s ease, box-shadow 0.16s ease;
+      background: linear-gradient(135deg, var(--coral), var(--coral-strong));
+      box-shadow: 0 10px 20px rgba(255, 98, 49, 0.25);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
     }
 
     button:hover,
     button:focus-visible {
       transform: translateY(-2px);
-      box-shadow: 0 14px 28px rgba(255, 95, 46, 0.34);
+      box-shadow: 0 12px 24px rgba(255, 98, 49, 0.28);
       outline: none;
+    }
+
+    button.secondary {
+      color: var(--ink);
+      background: white;
+      box-shadow: inset 0 0 0 2px rgba(22, 51, 64, 0.1);
+    }
+
+    button.ghost {
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.78);
+      box-shadow: inset 0 0 0 2px rgba(58, 134, 255, 0.14);
+    }
+
+    button.option-button {
+      width: 100%;
+      text-align: left;
+      padding: 14px 16px;
+      color: var(--ink);
+      background: white;
+      box-shadow: inset 0 0 0 2px rgba(58, 134, 255, 0.12);
+    }
+
+    button.option-button.correct {
+      background: #effff5;
+      box-shadow: inset 0 0 0 2px rgba(34, 160, 107, 0.28);
+    }
+
+    button.option-button.wrong {
+      background: #fff2ef;
+      box-shadow: inset 0 0 0 2px rgba(255, 98, 49, 0.26);
+    }
+
+    button:disabled {
+      cursor: default;
+      transform: none;
+      opacity: 0.86;
+    }
+
+    .screen {
+      display: none;
+    }
+
+    .screen.active {
+      display: block;
+      animation: rise-in 0.28s ease;
+    }
+
+    @keyframes rise-in {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .hero h1,
+    .hero h2,
+    .game-section h2 {
+      margin: 0;
+      line-height: 1;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 4vw, 3.3rem);
+    }
+
+    .hero p,
+    .subcopy,
+    .pill,
+    .result-banner,
+    .status-copy,
+    .target-text,
+    .drag-hint,
+    .math-question-text,
+    .question-meta,
+    .timer-card,
+    .answer-pill,
+    .option-label,
+    .setup-card,
+    .score-summary,
+    .game-card p {
+      font-family: 'Noto Sans Thai', sans-serif;
+    }
+
+    .hero p,
+    .subcopy {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .game-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .game-card {
+      position: relative;
+      overflow: hidden;
+      padding: 22px;
+      border-radius: 28px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.84));
+      box-shadow: 0 14px 26px rgba(24, 64, 82, 0.12);
+      border: 2px solid rgba(255, 255, 255, 0.72);
+    }
+
+    .game-card::before {
+      content: "";
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      top: -38px;
+      right: -30px;
+      background: rgba(255, 209, 102, 0.36);
+    }
+
+    .game-icon {
+      width: 82px;
+      height: 82px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 12px;
+      border-radius: 24px;
+      font-size: 2.6rem;
+      background: linear-gradient(135deg, #ebf5ff, #d7ecff);
+      box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.72);
+    }
+
+    .game-card h3 {
+      margin: 0 0 8px;
+      font-size: 1.65rem;
+      line-height: 1;
+    }
+
+    .game-card p {
+      margin: 0 0 18px;
+      color: var(--muted);
+      min-height: 52px;
+    }
+
+    .chip-row,
+    .toolbar,
+    .pill-row,
+    .setup-options,
+    .math-toolbar,
+    .option-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .pill-row,
+    .toolbar,
+    .math-toolbar {
+      margin-bottom: 16px;
+    }
+
+    .pill,
+    .answer-pill,
+    .timer-card {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: var(--blue-soft);
+      color: var(--ink);
+    }
+
+    .game-panel,
+    .setup-card,
+    .math-stage,
+    .result-banner,
+    .score-panel {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.9));
+      border-radius: 26px;
+      box-shadow: 0 14px 30px rgba(24, 64, 82, 0.1);
+      border: 2px solid rgba(58, 134, 255, 0.08);
+    }
+
+    .game-panel {
+      padding: 18px;
     }
 
     .board {
       position: relative;
       display: grid;
-      grid-template-columns: minmax(220px, 1fr) 160px minmax(260px, 1.2fr);
-      gap: 14px;
+      grid-template-columns: minmax(170px, 1fr) 92px minmax(210px, 1.2fr);
+      gap: 12px;
       align-items: start;
     }
 
     .column {
-      position: relative;
-      display: grid;
-      gap: 12px;
-    }
-
-    #sourceList,
-    #targetList {
       display: grid;
       gap: 10px;
     }
 
     .column-title {
-      margin: 0 0 4px;
-      font-size: 1.1rem;
+      margin: 0;
+      font-size: 1.05rem;
       color: var(--muted);
       text-align: center;
     }
 
+    #sourceList,
+    #targetList {
+      display: grid;
+      gap: 8px;
+    }
+
     .source-item,
     .target-item {
-      position: relative;
-      min-height: 58px;
+      min-height: 56px;
       display: flex;
       align-items: center;
-      border-radius: 22px;
-      border: 3px solid transparent;
+      gap: 12px;
+      border-radius: 20px;
       background: white;
-      box-shadow: 0 10px 20px rgba(33, 59, 74, 0.08);
+      box-shadow: 0 8px 18px rgba(33, 59, 74, 0.08);
+      border: 3px solid transparent;
       user-select: none;
     }
 
     .source-item {
       justify-content: space-between;
-      gap: 14px;
-      padding: 8px 14px;
+      padding: 8px 12px;
       cursor: grab;
     }
 
-    .source-item:active {
-      cursor: grabbing;
+    .source-item.dragging {
+      border-color: var(--blue);
+      transform: scale(1.01);
     }
 
-    .source-item.dragging {
-      border-color: var(--secondary);
-      transform: scale(1.02);
-      box-shadow: 0 18px 30px rgba(58, 134, 255, 0.2);
+    .source-item.selected {
+      border-color: var(--pink);
+      background: #fff3f8;
+      box-shadow: 0 10px 22px rgba(255, 122, 162, 0.2);
     }
 
     .target-item {
-      padding: 10px 14px;
-      justify-content: space-between;
+      padding: 10px 12px;
       border-color: rgba(58, 134, 255, 0.12);
       transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease;
     }
 
     .target-item.highlight {
-      border-color: var(--secondary);
+      border-color: var(--blue);
       background: #eef6ff;
-      transform: translateX(-4px);
+      transform: translateX(-2px);
     }
 
     .target-item.matched {
-      border-color: rgba(34, 160, 107, 0.35);
       background: #f0fff7;
+      border-color: rgba(34, 160, 107, 0.28);
     }
 
     .flag {
@@ -212,16 +418,9 @@
       line-height: 1;
     }
 
-    .drag-hint,
-    .target-text,
-    .note,
-    .score-summary {
-      font-family: 'Noto Sans Thai', sans-serif;
-    }
-
     .drag-hint {
       color: var(--muted);
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       text-align: right;
     }
 
@@ -231,21 +430,17 @@
       line-height: 1.2;
     }
 
-    .target-text strong {
-      font-size: 1.08rem;
-    }
-
     .target-text span {
       color: var(--muted);
-      font-size: 0.95rem;
+      font-size: 0.92rem;
     }
 
     .match-dot {
-      width: 16px;
-      height: 16px;
+      width: 15px;
+      height: 15px;
       border-radius: 50%;
-      background: #d8e9ff;
-      border: 3px solid var(--secondary);
+      background: #d7e8ff;
+      border: 3px solid var(--blue);
       flex: 0 0 auto;
     }
 
@@ -254,26 +449,24 @@
     }
 
     .target-item .match-dot {
-      margin-right: 12px;
       order: -1;
     }
 
     .center-guide {
-      min-height: 100%;
       display: grid;
       place-items: center;
-      padding-top: 50px;
+      padding-top: 40px;
     }
 
     .note {
-      max-width: 130px;
-      padding: 12px 14px;
-      border-radius: 22px;
-      background: linear-gradient(180deg, #fffdf4, #fff4cc);
-      border: 2px dashed rgba(22, 50, 64, 0.18);
+      max-width: 110px;
+      padding: 10px 12px;
+      border-radius: 20px;
       text-align: center;
       color: var(--muted);
-      font-size: 0.95rem;
+      border: 2px dashed rgba(22, 51, 64, 0.15);
+      background: linear-gradient(180deg, #fffdf4, #fff5cf);
+      font-size: 0.9rem;
     }
 
     .connections {
@@ -288,150 +481,354 @@
     .connections line {
       stroke-width: 6;
       stroke-linecap: round;
-      filter: drop-shadow(0 6px 10px rgba(58, 134, 255, 0.18));
+      filter: drop-shadow(0 6px 10px rgba(58, 134, 255, 0.16));
     }
 
     .score-panel {
-      margin-top: 18px;
+      margin-top: 16px;
       padding: 16px 18px;
-      border-radius: 22px;
-      background: linear-gradient(135deg, rgba(58, 134, 255, 0.12), rgba(255, 138, 91, 0.14));
       display: flex;
-      flex-wrap: wrap;
       justify-content: space-between;
-      align-items: center;
       gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
     }
 
     .score-panel strong {
       display: block;
-      font-size: 1.35rem;
+      font-size: 1.3rem;
     }
 
-    .score-summary {
+    .score-summary,
+    .status-copy {
       color: var(--muted);
-    }
-
-    .score-badge {
-      padding: 10px 16px;
-      border-radius: 999px;
-      background: white;
-      color: var(--text);
-      box-shadow: inset 0 0 0 2px rgba(22, 50, 64, 0.08);
     }
 
     .result-banner {
       margin-top: 14px;
-      padding: 12px 16px;
-      border-radius: 18px;
-      background: #fff;
-      border: 2px solid rgba(34, 160, 107, 0.24);
+      padding: 14px 16px;
       display: none;
-      font-family: 'Noto Sans Thai', sans-serif;
     }
 
     .result-banner.show {
       display: block;
-      animation: pop-in 0.28s ease;
     }
 
-    @keyframes pop-in {
-      from {
-        opacity: 0;
-        transform: translateY(8px) scale(0.98);
+    .setup-grid {
+      display: grid;
+      grid-template-columns: 300px minmax(0, 1fr);
+      gap: 16px;
+    }
+
+    .setup-card,
+    .math-stage {
+      padding: 18px;
+    }
+
+    .setup-card h3,
+    .math-stage h3 {
+      margin: 0 0 10px;
+      font-size: 1.45rem;
+      line-height: 1;
+    }
+
+    .setup-options {
+      margin: 14px 0;
+    }
+
+    .time-choice {
+      min-width: 82px;
+      color: var(--ink);
+      background: white;
+      box-shadow: inset 0 0 0 2px rgba(58, 134, 255, 0.12);
+    }
+
+    .time-choice.active {
+      color: white;
+      background: linear-gradient(135deg, var(--blue), #66a6ff);
+      box-shadow: 0 10px 20px rgba(58, 134, 255, 0.24);
+    }
+
+    .countdown {
+      display: none;
+      min-height: 120px;
+      border-radius: 26px;
+      margin-top: 14px;
+      place-items: center;
+      font-size: clamp(3rem, 10vw, 5rem);
+      background: linear-gradient(135deg, rgba(58, 134, 255, 0.14), rgba(255, 209, 102, 0.22));
+    }
+
+    .countdown.show {
+      display: grid;
+    }
+
+    .math-toolbar {
+      align-items: stretch;
+    }
+
+    .timer-card {
+      min-width: 110px;
+      background: rgba(255, 209, 102, 0.2);
+    }
+
+    .math-stage {
+      display: grid;
+      gap: 16px;
+    }
+
+    .question-card {
+      padding: 22px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, #f7fbff, #fffdfa);
+      box-shadow: inset 0 0 0 2px rgba(58, 134, 255, 0.08);
+    }
+
+    .question-meta {
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .math-question-text {
+      margin: 0;
+      font-size: clamp(1.7rem, 4vw, 2.5rem);
+      line-height: 1.2;
+    }
+
+    .story-question .math-question-text {
+      font-size: clamp(1.35rem, 3.6vw, 2rem);
+      line-height: 1.35;
+    }
+
+    .answer-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .option-label {
+      font-weight: 700;
+      margin-right: 8px;
+      color: var(--blue);
+    }
+
+    .math-empty {
+      padding: 24px;
+      border-radius: 24px;
+      background: rgba(58, 134, 255, 0.07);
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .status-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    @media (max-width: 900px) {
+      .game-grid,
+      .setup-grid {
+        grid-template-columns: 1fr;
       }
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
       }
     }
 
-    @media (max-width: 820px) {
-      .app {
-        padding: 16px;
+    @media (max-width: 700px) {
+      .app-shell {
+        width: min(100%, calc(100% - 10px));
+        margin: 8px auto;
+        padding: 12px;
+        border-radius: 24px;
       }
 
-      .board {
-        grid-template-columns: minmax(180px, 1fr) 92px minmax(220px, 1.1fr);
-        gap: 12px;
+      .brand-badge {
+        width: 48px;
+        height: 48px;
+        border-radius: 16px;
+        font-size: 1.5rem;
       }
 
-      .source-item,
-      .target-item {
-        min-height: 52px;
+      .brand-copy strong {
+        font-size: 1.25rem;
       }
 
-      .note {
-        padding: 10px 12px;
-        font-size: 0.88rem;
-      }
-    }
-
-    @media (max-width: 640px) {
       .board {
         grid-template-columns: 1fr;
       }
 
-      .center-guide {
-        min-height: auto;
-        padding-top: 0;
-      }
-
-      .note {
-        max-width: none;
-      }
-
+      .center-guide,
       .connections {
         display: none;
       }
 
       .source-item,
       .target-item {
-        min-height: 72px;
+        min-height: 66px;
+      }
+
+      .answer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .math-question-text {
+        font-size: 1.55rem;
+      }
+
+      .pill,
+      .answer-pill,
+      .timer-card,
+      button {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .nav-actions,
+      .setup-options,
+      .toolbar,
+      .math-toolbar,
+      .pill-row,
+      .status-strip {
+        display: grid;
+        grid-template-columns: 1fr;
       }
     }
   </style>
 </head>
 <body>
-  <main class="app">
-    <section class="hero">
-      <h1>เกมจับคู่ธงชาติ</h1>
-      <p>ลากธงชาติทางซ้ายไปจับคู่กับชื่อประเทศภาษาไทยและภาษาอังกฤษทางขวาให้ถูกต้อง</p>
-    </section>
+  <main class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-badge">🎈</div>
+        <div class="brand-copy">
+          <strong>Kiddo Playhouse</strong>
+          <span>เกมน่ารักสำหรับเด็ก เล่นได้ทั้งคอมและมือถือแนวตั้ง</span>
+        </div>
+      </div>
+      <div class="nav-actions">
+        <button class="ghost" id="homeButton" type="button">หน้าเลือกเกม</button>
+      </div>
+    </header>
 
-    <section class="toolbar">
-      <div class="pill" id="roundInfo">สุ่มคำถาม 10 ข้อ</div>
-      <div class="pill" id="progressInfo">จับคู่แล้ว 0 / 10</div>
-      <button id="resetButton" type="button">สุ่มใหม่</button>
-    </section>
-
-    <section class="board" id="board">
-      <svg class="connections" id="connections" aria-hidden="true"></svg>
-
-      <div class="column">
-        <h2 class="column-title">ธงชาติ</h2>
-        <div id="sourceList"></div>
+    <section class="screen active" id="homeScreen">
+      <div class="hero">
+        <h1>เลือกเกมที่อยากเล่น</h1>
+        <p>กดที่ไอคอนเพื่อเข้าเกมได้เลย</p>
       </div>
 
-      <div class="center-guide">
-        <div class="note">ลากจากจุดสีฟ้า แล้วปล่อยลงที่ชื่อประเทศ</div>
-      </div>
+      <div class="game-grid">
+        <article class="game-card">
+          <div class="game-icon">🌍</div>
+          <h3>เกมจับคู่ธงชาติ</h3>
+          <p>ลากธงชาติไปจับคู่กับชื่อประเทศภาษาไทยและอังกฤษ แบบสุ่ม 10 ข้อ พร้อมนับคะแนนเมื่อเล่นจบ</p>
+          <div class="chip-row">
+            <div class="pill">ธงชาติ 10 ข้อ</div>
+            <div class="pill">ลากจับคู่</div>
+          </div>
+          <div class="pill-row">
+            <button id="openFlagsGame" type="button">เริ่มเกมธงชาติ</button>
+          </div>
+        </article>
 
-      <div class="column">
-        <h2 class="column-title">ชื่อประเทศ</h2>
-        <div id="targetList"></div>
+        <article class="game-card">
+          <div class="game-icon">➕</div>
+          <h3>เกมบวกเลข ป.1</h3>
+          <p>โจทย์บวกเลขและโจทย์คำภาษาไทยสำหรับเด็ก ป.1 สุ่มเล่นครั้งละ 10 ข้อ เลือกเวลาต่อข้อได้ก่อนเริ่มเกม</p>
+          <div class="chip-row">
+            <div class="pill">คลังโจทย์ 100 ข้อ</div>
+            <div class="pill">ตอบ 4 ตัวเลือก</div>
+          </div>
+          <div class="pill-row">
+            <button id="openMathGame" type="button">เริ่มเกมบวกเลข</button>
+          </div>
+        </article>
       </div>
     </section>
 
-    <section class="score-panel">
-      <div>
-        <strong id="scoreValue">คะแนน: 0 / 10</strong>
-        <div class="score-summary" id="scoreSummary">ยังจับคู่ไม่ครบ ลองต่อเส้นให้ครบทั้ง 10 ข้อ</div>
+    <section class="screen" id="flagsScreen">
+      <div class="hero">
+        <h2>เกมจับคู่ธงชาติ</h2>
+        <p>ลากธงชาติทางซ้ายไปจับคู่กับชื่อประเทศทางขวาให้ถูกต้อง</p>
       </div>
-      <div class="score-badge" id="statusBadge">พร้อมเล่น</div>
+
+      <section class="game-panel">
+        <div class="toolbar">
+          <div class="pill" id="roundInfo">สุ่มคำถาม 10 ข้อ</div>
+          <div class="pill" id="progressInfo">จับคู่แล้ว 0 / 10</div>
+          <button id="resetFlagsButton" type="button">สุ่มใหม่</button>
+        </div>
+
+        <section class="board" id="board">
+          <svg class="connections" id="connections" aria-hidden="true"></svg>
+
+          <div class="column">
+            <h3 class="column-title">ธงชาติ</h3>
+            <div id="sourceList"></div>
+          </div>
+
+          <div class="center-guide">
+            <div class="note">ลากจากจุดสีฟ้าแล้วปล่อยที่ชื่อประเทศ</div>
+          </div>
+
+          <div class="column">
+            <h3 class="column-title">ชื่อประเทศ</h3>
+            <div id="targetList"></div>
+          </div>
+        </section>
+
+        <section class="score-panel">
+          <div>
+            <strong id="scoreValue">คะแนน: 0 / 10</strong>
+            <div class="score-summary" id="scoreSummary">ยังจับคู่ไม่ครบ ลองต่อเส้นให้ครบทั้ง 10 ข้อ</div>
+          </div>
+          <div class="pill" id="statusBadge">พร้อมเล่น</div>
+        </section>
+
+        <section class="result-banner" id="resultBanner"></section>
+      </section>
     </section>
 
-    <section class="result-banner" id="resultBanner"></section>
+    <section class="screen" id="mathScreen">
+      <div class="hero">
+        <h2>เกมบวกเลข ป.1</h2>
+        <p>เลือกเวลาต่อข้อก่อนเริ่ม และตอบคำถามทีละข้อแบบ 4 ตัวเลือก</p>
+      </div>
+
+      <section class="setup-grid">
+        <aside class="setup-card">
+          <h3>ตั้งค่าเกม</h3>
+          <p class="subcopy">เลือกเวลาต่อข้อ เด็กจะได้เวลาเพิ่ม 10 วินาทีอัตโนมัติเมื่อเจอโจทย์คำอ่านยาว</p>
+          <div class="setup-options" id="timeChoices"></div>
+          <div class="status-strip">
+            <div class="pill" id="mathQuestionPool">คลังโจทย์ 100 ข้อ</div>
+            <div class="pill" id="mathRoundSize">เล่นรอบละ 10 ข้อ</div>
+          </div>
+          <div class="pill-row" style="margin-top: 14px;">
+            <button id="startMathButton" type="button">เริ่มเกมบวกเลข</button>
+            <button class="secondary" id="resetMathButton" type="button">สุ่มโจทย์ใหม่</button>
+          </div>
+          <div class="countdown" id="countdownDisplay">3</div>
+        </aside>
+
+        <section class="math-stage">
+          <div class="math-toolbar">
+            <div class="timer-card" id="mathTimer">เวลา: -</div>
+            <div class="answer-pill" id="mathProgress">ข้อที่ 0 / 10</div>
+            <div class="answer-pill" id="mathScore">คะแนน: 0</div>
+          </div>
+          <div class="question-card" id="mathQuestionCard">
+            <div class="math-empty">กดเริ่มเกมเพื่อสุ่มคำถามและนับถอยหลัง 3 2 1</div>
+          </div>
+          <div class="answer-grid" id="mathOptions"></div>
+          <section class="result-banner" id="mathResultBanner"></section>
+        </section>
+      </section>
+    </section>
   </main>
 
   <script>
@@ -454,6 +851,45 @@
       { code: 'sa', flag: '🇸🇦', thai: 'ซาอุดีอาระเบีย', english: 'Saudi Arabia' }
     ];
 
+    const linePalette = ['#3a86ff', '#ff7b54', '#43aa8b', '#ffb703', '#9b5de5', '#ef476f', '#06d6a0', '#118ab2', '#fb8500', '#6a994e'];
+    const thaiChoices = ['ก', 'ข', 'ค', 'ง'];
+    const mathBaseTimes = [5, 10, 15, 30];
+
+    const appState = {
+      activeScreen: 'home',
+      flags: {
+        currentRound: [],
+        sourceOrder: [],
+        targetOrder: [],
+        sourceMatches: new Map(),
+        targetMatches: new Map(),
+        activeDrag: null,
+        previewLine: null,
+        selectedSourceCode: null
+      },
+      math: {
+        baseTime: 30,
+        bank: [],
+        round: [],
+        currentIndex: -1,
+        score: 0,
+        timerLeft: 0,
+        timerId: null,
+        countdownId: null,
+        isLocked: true,
+        isCountingDown: false
+      }
+    };
+
+    const screens = {
+      home: document.getElementById('homeScreen'),
+      flags: document.getElementById('flagsScreen'),
+      math: document.getElementById('mathScreen')
+    };
+
+    const homeButton = document.getElementById('homeButton');
+    const openFlagsGame = document.getElementById('openFlagsGame');
+    const openMathGame = document.getElementById('openMathGame');
     const board = document.getElementById('board');
     const sourceList = document.getElementById('sourceList');
     const targetList = document.getElementById('targetList');
@@ -464,17 +900,18 @@
     const roundInfo = document.getElementById('roundInfo');
     const statusBadge = document.getElementById('statusBadge');
     const resultBanner = document.getElementById('resultBanner');
-    const resetButton = document.getElementById('resetButton');
-
-    const linePalette = ['#3a86ff', '#ff7b54', '#43aa8b', '#ffb703', '#9b5de5', '#ef476f', '#06d6a0', '#118ab2', '#fb8500', '#6a994e'];
-
-    let currentRound = [];
-    let sourceOrder = [];
-    let targetOrder = [];
-    let sourceMatches = new Map();
-    let targetMatches = new Map();
-    let activeDrag = null;
-    let previewLine = null;
+    const resetFlagsButton = document.getElementById('resetFlagsButton');
+    const timeChoices = document.getElementById('timeChoices');
+    const startMathButton = document.getElementById('startMathButton');
+    const resetMathButton = document.getElementById('resetMathButton');
+    const countdownDisplay = document.getElementById('countdownDisplay');
+    const mathTimer = document.getElementById('mathTimer');
+    const mathProgress = document.getElementById('mathProgress');
+    const mathScore = document.getElementById('mathScore');
+    const mathQuestionCard = document.getElementById('mathQuestionCard');
+    const mathOptions = document.getElementById('mathOptions');
+    const mathResultBanner = document.getElementById('mathResultBanner');
+    const mathQuestionPool = document.getElementById('mathQuestionPool');
 
     function shuffle(items) {
       const cloned = [...items];
@@ -485,27 +922,174 @@
       return cloned;
     }
 
-    function startRound() {
-      const selected = shuffle(countries).slice(0, 10);
-      currentRound = selected;
-      sourceOrder = shuffle(selected);
-      targetOrder = shuffle(selected);
-      sourceMatches = new Map();
-      targetMatches = new Map();
-      activeDrag = null;
-      previewLine = null;
-      resultBanner.className = 'result-banner';
-      resultBanner.textContent = '';
-      renderBoard();
-      updateStatus();
+    function uniqueNumbers(generator, answer) {
+      const options = new Set([answer]);
+      while (options.size < 4) {
+        const candidate = generator();
+        if (candidate >= 0 && candidate <= 100) {
+          options.add(candidate);
+        }
+      }
+      return shuffle([...options]);
     }
 
-    function renderBoard() {
+    function createQuestion(prompt, answer, options, type, extraTime = 0) {
+      return {
+        prompt,
+        answer,
+        options: shuffle(options).map((optionText) => ({ label: '', value: optionText })),
+        type,
+        extraTime
+      };
+    }
+
+    function buildMathBank() {
+      const fixedQuestions = [
+        createQuestion('25 + 7 = __', 32, [32, 30, 31, 34], 'equation'),
+        createQuestion('__ + 5 = 10', 5, [5, 4, 6, 3], 'missing'),
+        createQuestion('แม่ให้ตังไปโรงเรียน 20 บาท ใช้ไป 5 บาท เหลือกี่บาท', 15, [15, 10, 20, 25], 'story', 10),
+        createQuestion('18 - 6 = __', 12, [12, 11, 13, 10], 'equation'),
+        createQuestion('__ - 3 = 4', 7, [7, 6, 8, 5], 'missing'),
+        createQuestion('มีขนม 14 ชิ้น กินไป 4 ชิ้น เหลือกี่ชิ้น', 10, [10, 9, 8, 11], 'story', 10)
+      ];
+      const questions = [];
+
+      for (let first = 1; first <= 10; first += 1) {
+        for (let second = 1; second <= 5; second += 1) {
+          const answer = first + second;
+          questions.push(createQuestion(`${first} + ${second} = __`, answer, uniqueNumbers(() => answer + Math.floor(Math.random() * 7) - 3, answer), 'equation'));
+        }
+      }
+
+      for (let first = 11; first <= 30; first += 1) {
+        for (let second = 1; second <= 9; second += 1) {
+          const answer = first + second;
+          questions.push(createQuestion(`${first} + ${second} = __`, answer, uniqueNumbers(() => answer + Math.floor(Math.random() * 9) - 4, answer), 'equation'));
+        }
+      }
+
+      for (let first = 5; first <= 20; first += 1) {
+        for (let second = 1; second <= Math.min(first - 1, 9); second += 1) {
+          const answer = first - second;
+          questions.push(createQuestion(`${first} - ${second} = __`, answer, uniqueNumbers(() => answer + Math.floor(Math.random() * 7) - 3, answer), 'equation'));
+        }
+      }
+
+      for (let total = 6; total <= 20; total += 1) {
+        for (let addend = 1; addend <= 4; addend += 1) {
+          const missing = total - addend;
+          if (missing >= 0 && missing <= 20) {
+            questions.push(createQuestion(`__ + ${addend} = ${total}`, missing, uniqueNumbers(() => missing + Math.floor(Math.random() * 7) - 3, missing), 'missing'));
+          }
+        }
+      }
+
+      for (let total = 8; total <= 20; total += 1) {
+        for (let first = 2; first <= 9; first += 1) {
+          const second = total - first;
+          if (second >= 1 && second <= 10) {
+            questions.push(createQuestion(`${first} + __ = ${total}`, second, uniqueNumbers(() => second + Math.floor(Math.random() * 7) - 3, second), 'missing'));
+          }
+        }
+      }
+
+      for (let answer = 1; answer <= 15; answer += 1) {
+        for (let second = 1; second <= 5; second += 1) {
+          const first = answer + second;
+          questions.push(createQuestion(`__ - ${second} = ${answer}`, first, uniqueNumbers(() => first + Math.floor(Math.random() * 7) - 3, first), 'missing'));
+        }
+      }
+
+      for (let first = 6; first <= 20; first += 1) {
+        for (let answer = 1; answer < first && answer <= 15; answer += 1) {
+          const missing = first - answer;
+          if (missing >= 1 && missing <= 10) {
+            questions.push(createQuestion(`${first} - __ = ${answer}`, missing, uniqueNumbers(() => missing + Math.floor(Math.random() * 7) - 3, missing), 'missing'));
+          }
+        }
+      }
+
+      const storyTemplates = [
+        { start: 20, change: 5, mode: 'subtract', subject: 'แม่ให้ตังไปโรงเรียน', item: 'บาท', action: 'ใช้ไป', ask: 'เหลือกี่บาท' },
+        { start: 12, change: 4, mode: 'add', subject: 'มีลูกโป่ง', item: 'ลูก', action: 'ซื้อเพิ่มอีก', ask: 'มีทั้งหมดกี่ลูก' },
+        { start: 15, change: 3, mode: 'add', subject: 'มีดินสอสี', item: 'แท่ง', action: 'ได้เพิ่มอีก', ask: 'มีทั้งหมดกี่แท่ง' },
+        { start: 18, change: 2, mode: 'add', subject: 'มีดอกไม้', item: 'ดอก', action: 'เก็บเพิ่มอีก', ask: 'มีทั้งหมดกี่ดอก' },
+        { start: 17, change: 6, mode: 'subtract', subject: 'มีขนม', item: 'ชิ้น', action: 'กินไป', ask: 'เหลือกี่ชิ้น' }
+      ];
+
+      const subtractStoryTemplates = [
+        { start: 16, change: 5, subject: 'มีส้ม', item: 'ผล', action: 'กินไป', ask: 'เหลือกี่ผล' },
+        { start: 19, change: 7, subject: 'มีดินสอ', item: 'แท่ง', action: 'ให้เพื่อนไป', ask: 'เหลือกี่แท่ง' },
+        { start: 14, change: 3, subject: 'มีลูกแก้ว', item: 'ลูก', action: 'ทำหายไป', ask: 'เหลือกี่ลูก' },
+        { start: 13, change: 2, subject: 'มีเค้ก', item: 'ชิ้น', action: 'กินไป', ask: 'เหลือกี่ชิ้น' },
+        { start: 18, change: 4, subject: 'มีหนังสือ', item: 'เล่ม', action: 'ยกให้ห้องสมุด', ask: 'เหลือกี่เล่ม' }
+      ];
+
+      for (let cycle = 0; cycle < 5; cycle += 1) {
+        storyTemplates.forEach((template, index) => {
+          const start = template.start + cycle;
+          const change = template.change + (index % 2);
+          const answer = template.mode === 'subtract' ? start - change : start + change;
+          const prompt = `${template.subject} ${start} ${template.item} ${template.action} ${change} ${template.item} ${template.ask}`;
+          questions.push(createQuestion(prompt, answer, uniqueNumbers(() => answer + Math.floor(Math.random() * 9) - 4, answer), 'story', 10));
+        });
+        subtractStoryTemplates.forEach((template, index) => {
+          const start = template.start + cycle;
+          const change = template.change + (index % 2);
+          const answer = start - change;
+          const prompt = `${template.subject} ${start} ${template.item} ${template.action} ${change} ${template.item} ${template.ask}`;
+          questions.push(createQuestion(prompt, answer, uniqueNumbers(() => answer + Math.floor(Math.random() * 9) - 4, answer), 'story', 10));
+        });
+      }
+
+      const mixedQuestions = [...fixedQuestions, ...shuffle(questions)].slice(0, 100);
+      return mixedQuestions.map((question) => ({
+        ...question,
+        options: shuffle(question.options).map((option, index) => ({ label: thaiChoices[index], value: option.value }))
+      }));
+    }
+
+    function switchScreen(screenName) {
+      Object.entries(screens).forEach(([name, screenElement]) => {
+        screenElement.classList.toggle('active', name === screenName);
+      });
+      appState.activeScreen = screenName;
+      homeButton.style.display = screenName === 'home' ? 'none' : 'inline-flex';
+
+      if (screenName === 'flags') {
+        startFlagRound();
+      }
+
+      if (screenName === 'math') {
+        stopMathTimers();
+        prepareMathRound();
+      }
+    }
+
+    function startFlagRound() {
+      const selected = shuffle(countries).slice(0, 10);
+      const flagsState = appState.flags;
+      flagsState.currentRound = selected;
+      flagsState.sourceOrder = shuffle(selected);
+      flagsState.targetOrder = shuffle(selected);
+      flagsState.sourceMatches = new Map();
+      flagsState.targetMatches = new Map();
+      flagsState.activeDrag = null;
+      flagsState.previewLine = null;
+      flagsState.selectedSourceCode = null;
+      resultBanner.className = 'result-banner';
+      resultBanner.textContent = '';
+      renderFlagBoard();
+      updateFlagStatus();
+    }
+
+    function renderFlagBoard() {
+      const flagsState = appState.flags;
       sourceList.innerHTML = '';
       targetList.innerHTML = '';
       connections.innerHTML = '';
 
-      sourceOrder.forEach((country, index) => {
+      flagsState.sourceOrder.forEach((country, index) => {
         const sourceItem = document.createElement('div');
         sourceItem.className = 'source-item';
         sourceItem.dataset.code = country.code;
@@ -516,10 +1100,11 @@
           <span class="match-dot"></span>
         `;
         sourceItem.addEventListener('pointerdown', handlePointerDown);
+        sourceItem.addEventListener('click', handleSourceTap);
         sourceList.appendChild(sourceItem);
       });
 
-      targetOrder.forEach((country) => {
+      flagsState.targetOrder.forEach((country) => {
         const targetItem = document.createElement('div');
         targetItem.className = 'target-item';
         targetItem.dataset.code = country.code;
@@ -530,19 +1115,49 @@
             <span>${country.english}</span>
           </div>
         `;
+        targetItem.addEventListener('click', handleTargetTap);
         targetList.appendChild(targetItem);
       });
     }
 
+    function isCompactLayout() {
+      return window.innerWidth <= 700;
+    }
+
+    function handleSourceTap(event) {
+      if (!isCompactLayout()) {
+        return;
+      }
+      const sourceCode = event.currentTarget.dataset.code;
+      const flagsState = appState.flags;
+      flagsState.selectedSourceCode = flagsState.selectedSourceCode === sourceCode ? null : sourceCode;
+      updateMatchedClasses();
+    }
+
+    function handleTargetTap(event) {
+      if (!isCompactLayout()) {
+        return;
+      }
+      const flagsState = appState.flags;
+      if (!flagsState.selectedSourceCode) {
+        return;
+      }
+      assignMatch(flagsState.selectedSourceCode, event.currentTarget.dataset.code);
+      flagsState.selectedSourceCode = null;
+      updateFlagStatus();
+    }
+
     function handlePointerDown(event) {
       const sourceItem = event.currentTarget;
+      const flagsState = appState.flags;
+      if (isCompactLayout()) {
+        return;
+      }
       event.preventDefault();
+      clearMatchFromSource(sourceItem.dataset.code);
 
-      const sourceCode = sourceItem.dataset.code;
-      clearMatchFromSource(sourceCode);
-
-      activeDrag = {
-        sourceCode,
+      flagsState.activeDrag = {
+        sourceCode: sourceItem.dataset.code,
         sourceElement: sourceItem,
         color: sourceItem.dataset.color,
         pointerId: event.pointerId
@@ -553,7 +1168,7 @@
         sourceItem.setPointerCapture(event.pointerId);
       } catch (_error) {
       }
-      previewLine = createLine(activeDrag.color, true);
+      flagsState.previewLine = createLine(flagsState.activeDrag.color, true);
       drawPreviewLine(event.clientX, event.clientY);
 
       window.addEventListener('pointermove', handlePointerMove);
@@ -562,46 +1177,45 @@
     }
 
     function handlePointerMove(event) {
-      if (!activeDrag) {
+      if (!appState.flags.activeDrag) {
         return;
       }
-
       drawPreviewLine(event.clientX, event.clientY);
       highlightTargetAtPoint(event.clientX, event.clientY);
     }
 
     function handlePointerUp(event) {
-      if (!activeDrag) {
+      const flagsState = appState.flags;
+      if (!flagsState.activeDrag) {
         return;
       }
 
-      const sourceElement = activeDrag.sourceElement;
+      const sourceElement = flagsState.activeDrag.sourceElement;
       clearHighlights();
-
       const dropTarget = findTargetAtPoint(event.clientX, event.clientY);
       if (dropTarget) {
-        assignMatch(activeDrag.sourceCode, dropTarget.dataset.code);
+        assignMatch(flagsState.activeDrag.sourceCode, dropTarget.dataset.code);
       }
 
-      if (previewLine) {
-        previewLine.remove();
-        previewLine = null;
+      if (flagsState.previewLine) {
+        flagsState.previewLine.remove();
+        flagsState.previewLine = null;
       }
 
       sourceElement.classList.remove('dragging');
       try {
-        if (sourceElement.hasPointerCapture(activeDrag.pointerId)) {
-          sourceElement.releasePointerCapture(activeDrag.pointerId);
+        if (sourceElement.hasPointerCapture(flagsState.activeDrag.pointerId)) {
+          sourceElement.releasePointerCapture(flagsState.activeDrag.pointerId);
         }
       } catch (_error) {
       }
 
-      activeDrag = null;
+      flagsState.activeDrag = null;
       window.removeEventListener('pointermove', handlePointerMove);
       window.removeEventListener('pointerup', handlePointerUp);
       window.removeEventListener('pointercancel', handlePointerUp);
       redrawConnections();
-      updateStatus();
+      updateFlagStatus();
     }
 
     function findTargetAtPoint(clientX, clientY) {
@@ -624,45 +1238,45 @@
     function assignMatch(sourceCode, targetCode) {
       clearMatchFromSource(sourceCode);
       clearMatchFromTarget(targetCode);
-      sourceMatches.set(sourceCode, targetCode);
-      targetMatches.set(targetCode, sourceCode);
+      appState.flags.sourceMatches.set(sourceCode, targetCode);
+      appState.flags.targetMatches.set(targetCode, sourceCode);
       updateMatchedClasses();
     }
 
     function clearMatchFromSource(sourceCode) {
-      if (!sourceMatches.has(sourceCode)) {
+      const flagsState = appState.flags;
+      if (!flagsState.sourceMatches.has(sourceCode)) {
         return;
       }
-
-      const targetCode = sourceMatches.get(sourceCode);
-      sourceMatches.delete(sourceCode);
-      if (targetMatches.get(targetCode) === sourceCode) {
-        targetMatches.delete(targetCode);
+      const targetCode = flagsState.sourceMatches.get(sourceCode);
+      flagsState.sourceMatches.delete(sourceCode);
+      if (flagsState.targetMatches.get(targetCode) === sourceCode) {
+        flagsState.targetMatches.delete(targetCode);
       }
       updateMatchedClasses();
     }
 
     function clearMatchFromTarget(targetCode) {
-      if (!targetMatches.has(targetCode)) {
+      const flagsState = appState.flags;
+      if (!flagsState.targetMatches.has(targetCode)) {
         return;
       }
-
-      const sourceCode = targetMatches.get(targetCode);
-      targetMatches.delete(targetCode);
-      if (sourceMatches.get(sourceCode) === targetCode) {
-        sourceMatches.delete(sourceCode);
+      const sourceCode = flagsState.targetMatches.get(targetCode);
+      flagsState.targetMatches.delete(targetCode);
+      if (flagsState.sourceMatches.get(sourceCode) === targetCode) {
+        flagsState.sourceMatches.delete(sourceCode);
       }
       updateMatchedClasses();
     }
 
     function updateMatchedClasses() {
+      const flagsState = appState.flags;
       sourceList.querySelectorAll('.source-item').forEach((item) => {
-        const isMatched = sourceMatches.has(item.dataset.code);
-        item.style.borderColor = isMatched ? item.dataset.color : 'transparent';
+        item.style.borderColor = flagsState.sourceMatches.has(item.dataset.code) ? item.dataset.color : 'transparent';
+        item.classList.toggle('selected', flagsState.selectedSourceCode === item.dataset.code);
       });
-
       targetList.querySelectorAll('.target-item').forEach((item) => {
-        item.classList.toggle('matched', targetMatches.has(item.dataset.code));
+        item.classList.toggle('matched', flagsState.targetMatches.has(item.dataset.code));
       });
     }
 
@@ -676,10 +1290,7 @@
 
     function getBoardPoint(clientX, clientY) {
       const rect = board.getBoundingClientRect();
-      return {
-        x: clientX - rect.left,
-        y: clientY - rect.top
-      };
+      return { x: clientX - rect.left, y: clientY - rect.top };
     }
 
     function getAnchorPoint(element, side) {
@@ -692,13 +1303,11 @@
     }
 
     function drawPreviewLine(clientX, clientY) {
-      if (!activeDrag || !previewLine) {
+      const flagsState = appState.flags;
+      if (!flagsState.activeDrag || !flagsState.previewLine) {
         return;
       }
-
-      const start = getAnchorPoint(activeDrag.sourceElement, 'right');
-      const end = getBoardPoint(clientX, clientY);
-      setLinePosition(previewLine, start, end);
+      setLinePosition(flagsState.previewLine, getAnchorPoint(flagsState.activeDrag.sourceElement, 'right'), getBoardPoint(clientX, clientY));
     }
 
     function setLinePosition(line, start, end) {
@@ -709,46 +1318,40 @@
     }
 
     function redrawConnections() {
+      const flagsState = appState.flags;
       connections.querySelectorAll('line[data-preview="false"]').forEach((line) => line.remove());
-      if (window.innerWidth <= 640) {
+      if (window.innerWidth <= 700 || appState.activeScreen !== 'flags') {
         return;
       }
-
-      sourceMatches.forEach((targetCode, sourceCode) => {
+      flagsState.sourceMatches.forEach((targetCode, sourceCode) => {
         const sourceElement = sourceList.querySelector(`[data-code="${sourceCode}"]`);
         const targetElement = targetList.querySelector(`[data-code="${targetCode}"]`);
         if (!sourceElement || !targetElement) {
           return;
         }
-
         const line = createLine(sourceElement.dataset.color);
-        const start = getAnchorPoint(sourceElement, 'right');
-        const end = getAnchorPoint(targetElement, 'left');
-        setLinePosition(line, start, end);
+        setLinePosition(line, getAnchorPoint(sourceElement, 'right'), getAnchorPoint(targetElement, 'left'));
       });
     }
 
-    function updateStatus() {
-      const matchedCount = sourceMatches.size;
+    function updateFlagStatus() {
+      const flagsState = appState.flags;
+      const matchedCount = flagsState.sourceMatches.size;
       let correctCount = 0;
-
-      sourceMatches.forEach((targetCode, sourceCode) => {
+      flagsState.sourceMatches.forEach((targetCode, sourceCode) => {
         if (sourceCode === targetCode) {
           correctCount += 1;
         }
       });
 
-      roundInfo.textContent = `สุ่มคำถาม ${currentRound.length} ข้อ`;
-      progressInfo.textContent = `จับคู่แล้ว ${matchedCount} / ${currentRound.length}`;
-      scoreValue.textContent = `คะแนน: ${correctCount} / ${currentRound.length}`;
+      roundInfo.textContent = `สุ่มคำถาม ${flagsState.currentRound.length} ข้อ`;
+      progressInfo.textContent = `จับคู่แล้ว ${matchedCount} / ${flagsState.currentRound.length}`;
+      scoreValue.textContent = `คะแนน: ${correctCount} / ${flagsState.currentRound.length}`;
 
-      if (matchedCount === currentRound.length) {
-        const praise = correctCount === currentRound.length
-          ? 'เก่งมาก จับคู่ถูกครบทุกข้อ'
-          : 'ครบแล้ว ลองกดสุ่มใหม่เพื่อเล่นอีกครั้ง';
-        scoreSummary.textContent = `คุณตอบถูก ${correctCount} จาก ${currentRound.length} ข้อ`;
-        statusBadge.textContent = correctCount === currentRound.length ? 'สมบูรณ์แบบ' : 'เสร็จสิ้น';
-        resultBanner.textContent = `${praise} คะแนนรวม ${correctCount} / ${currentRound.length}`;
+      if (matchedCount === flagsState.currentRound.length && flagsState.currentRound.length > 0) {
+        scoreSummary.textContent = `คุณตอบถูก ${correctCount} จาก ${flagsState.currentRound.length} ข้อ`;
+        statusBadge.textContent = correctCount === flagsState.currentRound.length ? 'สมบูรณ์แบบ' : 'เสร็จสิ้น';
+        resultBanner.textContent = `${correctCount === flagsState.currentRound.length ? 'เก่งมาก จับคู่ถูกครบทุกข้อ' : 'จับคู่ครบแล้ว'} คะแนนรวม ${correctCount} / ${flagsState.currentRound.length}`;
         resultBanner.className = 'result-banner show';
       } else {
         scoreSummary.textContent = 'ยังจับคู่ไม่ครบ ลองต่อเส้นให้ครบทั้ง 10 ข้อ';
@@ -761,10 +1364,237 @@
       redrawConnections();
     }
 
-    window.addEventListener('resize', redrawConnections);
-    resetButton.addEventListener('click', startRound);
+    function renderTimeChoices() {
+      timeChoices.innerHTML = '';
+      mathBaseTimes.forEach((seconds) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = `time-choice${appState.math.baseTime === seconds ? ' active' : ''}`;
+        button.textContent = `${seconds} วินาที`;
+        button.addEventListener('click', () => {
+          appState.math.baseTime = seconds;
+          renderTimeChoices();
+          if (!appState.math.isCountingDown && appState.math.currentIndex < 0) {
+            renderMathIdleState();
+          }
+        });
+        timeChoices.appendChild(button);
+      });
+    }
 
-    startRound();
+    function prepareMathRound() {
+      stopMathTimers();
+      const mathState = appState.math;
+      mathState.round = shuffle(mathState.bank).slice(0, 10).map((question) => ({
+        ...question,
+        options: shuffle(question.options).map((option, index) => ({ label: thaiChoices[index], value: option.value }))
+      }));
+      mathState.currentIndex = -1;
+      mathState.score = 0;
+      mathState.timerLeft = 0;
+      mathState.isLocked = true;
+      mathState.isCountingDown = false;
+      updateMathHeader();
+      renderMathIdleState();
+    }
+
+    function renderMathIdleState() {
+      mathQuestionCard.className = 'question-card';
+      mathQuestionCard.innerHTML = `<div class="math-empty">เลือกเวลา ${appState.math.baseTime} วินาทีต่อข้อ แล้วกดเริ่มเกม</div>`;
+      mathOptions.innerHTML = '';
+      mathResultBanner.className = 'result-banner';
+      mathResultBanner.textContent = '';
+      mathTimer.textContent = 'เวลา: -';
+    }
+
+    function startMathGame() {
+      const mathState = appState.math;
+      stopMathTimers();
+      mathState.score = 0;
+      mathState.currentIndex = -1;
+      mathState.isLocked = true;
+      mathState.isCountingDown = true;
+      updateMathHeader();
+      let count = 3;
+      countdownDisplay.textContent = count;
+      countdownDisplay.classList.add('show');
+      mathQuestionCard.className = 'question-card';
+      mathQuestionCard.innerHTML = '<div class="math-empty">เตรียมตัวให้พร้อม</div>';
+      mathOptions.innerHTML = '';
+      mathTimer.textContent = `เวลา: ${mathState.baseTime} วิ`;
+
+      mathState.countdownId = window.setInterval(() => {
+        count -= 1;
+        if (count > 0) {
+          countdownDisplay.textContent = count;
+          return;
+        }
+        if (count === 0) {
+          countdownDisplay.textContent = 'เริ่ม';
+          return;
+        }
+        window.clearInterval(mathState.countdownId);
+        mathState.countdownId = null;
+        mathState.isCountingDown = false;
+        countdownDisplay.classList.remove('show');
+        showMathQuestion(0);
+      }, 700);
+    }
+
+    function stopMathTimers() {
+      const mathState = appState.math;
+      if (mathState.timerId) {
+        window.clearInterval(mathState.timerId);
+        mathState.timerId = null;
+      }
+      if (mathState.countdownId) {
+        window.clearInterval(mathState.countdownId);
+        mathState.countdownId = null;
+      }
+      countdownDisplay.classList.remove('show');
+    }
+
+    function showMathQuestion(index) {
+      const mathState = appState.math;
+      const question = mathState.round[index];
+      if (!question) {
+        finishMathRound();
+        return;
+      }
+
+      mathState.currentIndex = index;
+      mathState.isLocked = false;
+      mathState.timerLeft = mathState.baseTime + (question.extraTime || 0);
+      updateMathHeader();
+      renderMathQuestion(question);
+      startMathTimer();
+    }
+
+    function renderMathQuestion(question) {
+      mathQuestionCard.className = `question-card${question.type === 'story' ? ' story-question' : ''}`;
+      mathQuestionCard.dataset.questionType = question.type;
+      mathQuestionCard.dataset.extraTime = String(question.extraTime || 0);
+      mathQuestionCard.innerHTML = `
+        <div class="question-meta">${question.type === 'story' ? 'โจทย์อ่าน' : 'โจทย์คณิต'} ${question.extraTime ? `• เพิ่มเวลา ${question.extraTime} วิ` : ''}</div>
+        <p class="math-question-text">${question.prompt}</p>
+      `;
+      mathOptions.innerHTML = '';
+      question.options.forEach((option) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'option-button';
+        button.dataset.value = String(option.value);
+        button.innerHTML = `<span class="option-label">${option.label}</span>${option.value}`;
+        button.addEventListener('click', () => handleMathAnswer(option.value, button));
+        mathOptions.appendChild(button);
+      });
+    }
+
+    function startMathTimer() {
+      const mathState = appState.math;
+      if (mathState.timerId) {
+        window.clearInterval(mathState.timerId);
+      }
+      mathTimer.textContent = `เวลา: ${mathState.timerLeft} วิ`;
+      mathState.timerId = window.setInterval(() => {
+        mathState.timerLeft -= 1;
+        mathTimer.textContent = `เวลา: ${Math.max(mathState.timerLeft, 0)} วิ`;
+        if (mathState.timerLeft > 0) {
+          return;
+        }
+        window.clearInterval(mathState.timerId);
+        mathState.timerId = null;
+        lockMathQuestion(false, true);
+      }, 1000);
+    }
+
+    function handleMathAnswer(selectedValue, buttonElement) {
+      const mathState = appState.math;
+      if (mathState.isLocked) {
+        return;
+      }
+      const question = mathState.round[mathState.currentIndex];
+      const isCorrect = Number(selectedValue) === Number(question.answer);
+      if (buttonElement) {
+        buttonElement.classList.add(isCorrect ? 'correct' : 'wrong');
+      }
+      lockMathQuestion(isCorrect, false);
+    }
+
+    function lockMathQuestion(isCorrect, fromTimeout) {
+      const mathState = appState.math;
+      const question = mathState.round[mathState.currentIndex];
+      if (mathState.isLocked || !question) {
+        return;
+      }
+      mathState.isLocked = true;
+      if (mathState.timerId) {
+        window.clearInterval(mathState.timerId);
+        mathState.timerId = null;
+      }
+      if (isCorrect) {
+        mathState.score += 1;
+      }
+      Array.from(mathOptions.querySelectorAll('button')).forEach((button) => {
+        button.disabled = true;
+        const buttonValue = Number(button.dataset.value);
+        if (buttonValue === Number(question.answer)) {
+          button.classList.add('correct');
+        }
+      });
+      mathResultBanner.textContent = fromTimeout
+        ? `หมดเวลา ข้อนี้คำตอบคือ ${question.answer}`
+        : isCorrect
+          ? `ถูกต้อง คำตอบคือ ${question.answer}`
+          : `ยังไม่ถูก ข้อนี้คำตอบคือ ${question.answer}`;
+      mathResultBanner.className = 'result-banner show';
+      updateMathHeader();
+      window.setTimeout(() => showMathQuestion(mathState.currentIndex + 1), 1100);
+    }
+
+    function updateMathHeader() {
+      const mathState = appState.math;
+      const currentDisplay = mathState.currentIndex >= 0 ? Math.min(mathState.currentIndex + 1, 10) : 0;
+      mathProgress.textContent = `ข้อที่ ${currentDisplay} / 10`;
+      mathScore.textContent = `คะแนน: ${mathState.score}`;
+      mathQuestionPool.textContent = `คลังโจทย์ ${mathState.bank.length} ข้อ`;
+    }
+
+    function finishMathRound() {
+      stopMathTimers();
+      const mathState = appState.math;
+      mathState.currentIndex = mathState.round.length;
+      mathState.isLocked = true;
+      updateMathHeader();
+      mathTimer.textContent = 'เวลา: จบรอบ';
+      mathQuestionCard.className = 'question-card';
+      mathQuestionCard.innerHTML = `
+        <div class="question-meta">สรุปผล</div>
+        <p class="math-question-text">ตอบถูก ${mathState.score} จาก ${mathState.round.length} ข้อ</p>
+      `;
+      mathOptions.innerHTML = '';
+      mathResultBanner.textContent = mathState.score === mathState.round.length ? 'ยอดเยี่ยม ตอบถูกครบทุกข้อ' : 'กดเริ่มเกมเพื่อเล่นรอบใหม่ได้เลย';
+      mathResultBanner.className = 'result-banner show';
+    }
+
+    window.addEventListener('resize', redrawConnections);
+    homeButton.addEventListener('click', () => {
+      stopMathTimers();
+      switchScreen('home');
+    });
+    openFlagsGame.addEventListener('click', () => switchScreen('flags'));
+    openMathGame.addEventListener('click', () => switchScreen('math'));
+    resetFlagsButton.addEventListener('click', startFlagRound);
+    startMathButton.addEventListener('click', () => {
+      prepareMathRound();
+      startMathGame();
+    });
+    resetMathButton.addEventListener('click', prepareMathRound);
+
+    appState.math.bank = buildMathBank();
+    renderTimeChoices();
+    prepareMathRound();
+    switchScreen('home');
   </script>
 </body>
 </html>
