@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kiddo Playhouse</title>
+  <title>YiWha PlayHouse</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700&family=Noto+Sans+Thai:wght@400;700&display=swap');
 
@@ -153,6 +153,12 @@
       color: var(--ink);
       background: white;
       box-shadow: inset 0 0 0 2px rgba(22, 51, 64, 0.1);
+    }
+
+    button.secondary.active {
+      color: white;
+      background: linear-gradient(135deg, var(--blue), #66a6ff);
+      box-shadow: 0 10px 20px rgba(58, 134, 255, 0.24);
     }
 
     button.ghost {
@@ -396,6 +402,23 @@
       box-shadow: 0 10px 22px rgba(255, 122, 162, 0.2);
     }
 
+    .flag-question-card {
+      min-height: 120px;
+      justify-content: center;
+      gap: 16px;
+      padding: 14px;
+    }
+
+    .flag-question-card .flag {
+      font-size: 3.2rem;
+    }
+
+    .flag-choice-button {
+      width: 100%;
+      text-align: left;
+      border-radius: 16px;
+    }
+
     .target-item {
       padding: 10px 12px;
       border-color: rgba(58, 134, 255, 0.12);
@@ -467,6 +490,20 @@
       border: 2px dashed rgba(22, 51, 64, 0.15);
       background: linear-gradient(180deg, #fffdf4, #fff5cf);
       font-size: 0.9rem;
+    }
+
+    .action-note {
+      max-width: 220px;
+      min-height: 90px;
+      display: grid;
+      place-items: center;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #10435a;
+      border-style: solid;
+      border-width: 3px;
+      border-color: rgba(58, 134, 255, 0.25);
+      background: linear-gradient(180deg, #f2f9ff, #fff7df);
     }
 
     .connections {
@@ -543,10 +580,23 @@
       box-shadow: inset 0 0 0 2px rgba(58, 134, 255, 0.12);
     }
 
+    .difficulty-choice {
+      min-width: 96px;
+      color: var(--ink);
+      background: white;
+      box-shadow: inset 0 0 0 2px rgba(255, 122, 162, 0.18);
+    }
+
     .time-choice.active {
       color: white;
       background: linear-gradient(135deg, var(--blue), #66a6ff);
       box-shadow: 0 10px 20px rgba(58, 134, 255, 0.24);
+    }
+
+    .difficulty-choice.active {
+      color: white;
+      background: linear-gradient(135deg, #ff7aa2, #ff8c64);
+      box-shadow: 0 10px 20px rgba(255, 122, 162, 0.28);
     }
 
     .countdown {
@@ -672,6 +722,10 @@
         min-height: 66px;
       }
 
+      .flag-question-card .flag {
+        font-size: 2.8rem;
+      }
+
       .answer-grid {
         grid-template-columns: 1fr;
       }
@@ -706,7 +760,7 @@
       <div class="brand">
         <div class="brand-badge">🎈</div>
         <div class="brand-copy">
-          <strong>Kiddo Playhouse</strong>
+          <strong>YiWha PlayHouse</strong>
           <span>เกมน่ารักสำหรับเด็ก เล่นได้ทั้งคอมและมือถือแนวตั้ง</span>
         </div>
       </div>
@@ -725,10 +779,10 @@
         <article class="game-card">
           <div class="game-icon">🌍</div>
           <h3>เกมจับคู่ธงชาติ</h3>
-          <p>ลากธงชาติไปจับคู่กับชื่อประเทศภาษาไทยและอังกฤษ แบบสุ่ม 10 ข้อ พร้อมนับคะแนนเมื่อเล่นจบ</p>
+          <p>ดูธงชาติทีละข้อ แล้วกดเลือกชื่อประเทศที่ถูกต้องจาก 4 ตัวเลือก แบบสุ่ม 10 ข้อ</p>
           <div class="chip-row">
             <div class="pill">ธงชาติ 10 ข้อ</div>
-            <div class="pill">ลากจับคู่</div>
+            <div class="pill">ตอบแบบง่าย</div>
           </div>
           <div class="pill-row">
             <button id="openFlagsGame" type="button">เริ่มเกมธงชาติ</button>
@@ -740,7 +794,7 @@
           <h3>เกมบวกเลข ป.1</h3>
           <p>โจทย์บวกเลขและโจทย์คำภาษาไทยสำหรับเด็ก ป.1 สุ่มเล่นครั้งละ 10 ข้อ เลือกเวลาต่อข้อได้ก่อนเริ่มเกม</p>
           <div class="chip-row">
-            <div class="pill">คลังโจทย์ 100 ข้อ</div>
+            <div class="pill">คลังโจทย์ 200 ข้อ</div>
             <div class="pill">ตอบ 4 ตัวเลือก</div>
           </div>
           <div class="pill-row">
@@ -753,38 +807,39 @@
     <section class="screen" id="flagsScreen">
       <div class="hero">
         <h2>เกมจับคู่ธงชาติ</h2>
-        <p>ลากธงชาติทางซ้ายไปจับคู่กับชื่อประเทศทางขวาให้ถูกต้อง</p>
+        <p>เลือกกลุ่มประเทศก่อน แล้วดูธงทีละข้อและกดเลือกคำตอบ</p>
       </div>
 
       <section class="game-panel">
         <div class="toolbar">
+          <div class="pill" id="flagGroupInfo">กลุ่ม: อาเซียน</div>
           <div class="pill" id="roundInfo">สุ่มคำถาม 10 ข้อ</div>
-          <div class="pill" id="progressInfo">จับคู่แล้ว 0 / 10</div>
-          <button id="resetFlagsButton" type="button">สุ่มใหม่</button>
+          <div class="pill" id="progressInfo">ข้อที่ 0 / 10</div>
+          <button class="secondary" id="chooseAseanButton" type="button">อาเซียน</button>
+          <button class="secondary" id="chooseWorldButton" type="button">ทั่วโลก</button>
+          <button id="resetFlagsButton" type="button">เริ่มรอบใหม่</button>
         </div>
 
         <section class="board" id="board">
-          <svg class="connections" id="connections" aria-hidden="true"></svg>
-
           <div class="column">
-            <h3 class="column-title">ธงชาติ</h3>
-            <div id="sourceList"></div>
+            <h3 class="column-title">โจทย์ธงชาติ</h3>
+            <div id="targetList"></div>
           </div>
 
           <div class="center-guide">
-            <div class="note">ลากจากจุดสีฟ้าแล้วปล่อยที่ชื่อประเทศ</div>
+            <div class="note action-note" id="flagActionText">ดูธงแล้วเลือกชื่อประเทศด้านขวา</div>
           </div>
 
           <div class="column">
-            <h3 class="column-title">ชื่อประเทศ</h3>
-            <div id="targetList"></div>
+            <h3 class="column-title">ตัวเลือกชื่อประเทศ</h3>
+            <div id="sourceList"></div>
           </div>
         </section>
 
         <section class="score-panel">
           <div>
             <strong id="scoreValue">คะแนน: 0 / 10</strong>
-            <div class="score-summary" id="scoreSummary">ยังจับคู่ไม่ครบ ลองต่อเส้นให้ครบทั้ง 10 ข้อ</div>
+            <div class="score-summary" id="scoreSummary">ตอบทีละข้อให้ครบ 10 ข้อ</div>
           </div>
           <div class="pill" id="statusBadge">พร้อมเล่น</div>
         </section>
@@ -803,9 +858,12 @@
         <aside class="setup-card">
           <h3>ตั้งค่าเกม</h3>
           <p class="subcopy">เลือกเวลาต่อข้อ เด็กจะได้เวลาเพิ่ม 10 วินาทีอัตโนมัติเมื่อเจอโจทย์คำอ่านยาว</p>
+          <div class="subcopy" style="margin-top: 10px;">เลือกระดับความยาก</div>
+          <div class="setup-options" id="difficultyChoices"></div>
+          <div class="subcopy" style="margin-top: 4px;">เลือกเวลาต่อข้อ</div>
           <div class="setup-options" id="timeChoices"></div>
           <div class="status-strip">
-            <div class="pill" id="mathQuestionPool">คลังโจทย์ 100 ข้อ</div>
+            <div class="pill" id="mathQuestionPool">ระดับง่าย 100 ข้อ</div>
             <div class="pill" id="mathRoundSize">เล่นรอบละ 10 ข้อ</div>
           </div>
           <div class="pill-row" style="margin-top: 14px;">
@@ -833,22 +891,31 @@
 
   <script>
     const countries = [
-      { code: 'th', flag: '🇹🇭', thai: 'ประเทศไทย', english: 'Thailand' },
-      { code: 'jp', flag: '🇯🇵', thai: 'ญี่ปุ่น', english: 'Japan' },
-      { code: 'kr', flag: '🇰🇷', thai: 'เกาหลีใต้', english: 'South Korea' },
-      { code: 'cn', flag: '🇨🇳', thai: 'จีน', english: 'China' },
-      { code: 'in', flag: '🇮🇳', thai: 'อินเดีย', english: 'India' },
-      { code: 'us', flag: '🇺🇸', thai: 'สหรัฐอเมริกา', english: 'United States' },
-      { code: 'gb', flag: '🇬🇧', thai: 'สหราชอาณาจักร', english: 'United Kingdom' },
-      { code: 'fr', flag: '🇫🇷', thai: 'ฝรั่งเศส', english: 'France' },
-      { code: 'de', flag: '🇩🇪', thai: 'เยอรมนี', english: 'Germany' },
-      { code: 'it', flag: '🇮🇹', thai: 'อิตาลี', english: 'Italy' },
-      { code: 'br', flag: '🇧🇷', thai: 'บราซิล', english: 'Brazil' },
-      { code: 'au', flag: '🇦🇺', thai: 'ออสเตรเลีย', english: 'Australia' },
-      { code: 'ca', flag: '🇨🇦', thai: 'แคนาดา', english: 'Canada' },
-      { code: 'mx', flag: '🇲🇽', thai: 'เม็กซิโก', english: 'Mexico' },
-      { code: 'es', flag: '🇪🇸', thai: 'สเปน', english: 'Spain' },
-      { code: 'sa', flag: '🇸🇦', thai: 'ซาอุดีอาระเบีย', english: 'Saudi Arabia' }
+      { code: 'th', flag: '🇹🇭', thai: 'ประเทศไทย', english: 'Thailand', group: 'asean' },
+      { code: 'id', flag: '🇮🇩', thai: 'อินโดนีเซีย', english: 'Indonesia', group: 'asean' },
+      { code: 'my', flag: '🇲🇾', thai: 'มาเลเซีย', english: 'Malaysia', group: 'asean' },
+      { code: 'sg', flag: '🇸🇬', thai: 'สิงคโปร์', english: 'Singapore', group: 'asean' },
+      { code: 'ph', flag: '🇵🇭', thai: 'ฟิลิปปินส์', english: 'Philippines', group: 'asean' },
+      { code: 'vn', flag: '🇻🇳', thai: 'เวียดนาม', english: 'Vietnam', group: 'asean' },
+      { code: 'la', flag: '🇱🇦', thai: 'ลาว', english: 'Laos', group: 'asean' },
+      { code: 'kh', flag: '🇰🇭', thai: 'กัมพูชา', english: 'Cambodia', group: 'asean' },
+      { code: 'mm', flag: '🇲🇲', thai: 'เมียนมา', english: 'Myanmar', group: 'asean' },
+      { code: 'bn', flag: '🇧🇳', thai: 'บรูไน', english: 'Brunei', group: 'asean' },
+      { code: 'jp', flag: '🇯🇵', thai: 'ญี่ปุ่น', english: 'Japan', group: 'world' },
+      { code: 'kr', flag: '🇰🇷', thai: 'เกาหลีใต้', english: 'South Korea', group: 'world' },
+      { code: 'cn', flag: '🇨🇳', thai: 'จีน', english: 'China', group: 'world' },
+      { code: 'in', flag: '🇮🇳', thai: 'อินเดีย', english: 'India', group: 'world' },
+      { code: 'us', flag: '🇺🇸', thai: 'สหรัฐอเมริกา', english: 'United States', group: 'world' },
+      { code: 'gb', flag: '🇬🇧', thai: 'สหราชอาณาจักร', english: 'United Kingdom', group: 'world' },
+      { code: 'fr', flag: '🇫🇷', thai: 'ฝรั่งเศส', english: 'France', group: 'world' },
+      { code: 'de', flag: '🇩🇪', thai: 'เยอรมนี', english: 'Germany', group: 'world' },
+      { code: 'it', flag: '🇮🇹', thai: 'อิตาลี', english: 'Italy', group: 'world' },
+      { code: 'br', flag: '🇧🇷', thai: 'บราซิล', english: 'Brazil', group: 'world' },
+      { code: 'au', flag: '🇦🇺', thai: 'ออสเตรเลีย', english: 'Australia', group: 'world' },
+      { code: 'ca', flag: '🇨🇦', thai: 'แคนาดา', english: 'Canada', group: 'world' },
+      { code: 'mx', flag: '🇲🇽', thai: 'เม็กซิโก', english: 'Mexico', group: 'world' },
+      { code: 'es', flag: '🇪🇸', thai: 'สเปน', english: 'Spain', group: 'world' },
+      { code: 'sa', flag: '🇸🇦', thai: 'ซาอุดีอาระเบีย', english: 'Saudi Arabia', group: 'world' }
     ];
 
     const linePalette = ['#3a86ff', '#ff7b54', '#43aa8b', '#ffb703', '#9b5de5', '#ef476f', '#06d6a0', '#118ab2', '#fb8500', '#6a994e'];
@@ -858,17 +925,19 @@
     const appState = {
       activeScreen: 'home',
       flags: {
-        currentRound: [],
-        sourceOrder: [],
-        targetOrder: [],
-        sourceMatches: new Map(),
-        targetMatches: new Map(),
-        activeDrag: null,
-        previewLine: null,
-        selectedSourceCode: null
+        selectedGroup: 'asean',
+        questions: [],
+        currentIndex: 0,
+        score: 0,
+        isLocked: false
       },
       math: {
         baseTime: 30,
+        selectedDifficulty: 'easy',
+        banks: {
+          easy: [],
+          medium: []
+        },
         bank: [],
         round: [],
         currentIndex: -1,
@@ -893,15 +962,19 @@
     const board = document.getElementById('board');
     const sourceList = document.getElementById('sourceList');
     const targetList = document.getElementById('targetList');
-    const connections = document.getElementById('connections');
     const scoreValue = document.getElementById('scoreValue');
     const scoreSummary = document.getElementById('scoreSummary');
     const progressInfo = document.getElementById('progressInfo');
+    const flagGroupInfo = document.getElementById('flagGroupInfo');
+    const chooseAseanButton = document.getElementById('chooseAseanButton');
+    const chooseWorldButton = document.getElementById('chooseWorldButton');
+    const flagActionText = document.getElementById('flagActionText');
     const roundInfo = document.getElementById('roundInfo');
     const statusBadge = document.getElementById('statusBadge');
     const resultBanner = document.getElementById('resultBanner');
     const resetFlagsButton = document.getElementById('resetFlagsButton');
     const timeChoices = document.getElementById('timeChoices');
+    const difficultyChoices = document.getElementById('difficultyChoices');
     const startMathButton = document.getElementById('startMathButton');
     const resetMathButton = document.getElementById('resetMathButton');
     const countdownDisplay = document.getElementById('countdownDisplay');
@@ -943,7 +1016,7 @@
       };
     }
 
-    function buildMathBank() {
+    function buildMathBanks() {
       const fixedQuestions = [
         createQuestion('25 + 7 = __', 32, [32, 30, 31, 34], 'equation'),
         createQuestion('__ + 5 = 10', 5, [5, 4, 6, 3], 'missing'),
@@ -952,26 +1025,26 @@
         createQuestion('__ - 3 = 4', 7, [7, 6, 8, 5], 'missing'),
         createQuestion('มีขนม 14 ชิ้น กินไป 4 ชิ้น เหลือกี่ชิ้น', 10, [10, 9, 8, 11], 'story', 10)
       ];
-      const questions = [];
+      const easyQuestions = [];
 
       for (let first = 1; first <= 10; first += 1) {
         for (let second = 1; second <= 5; second += 1) {
           const answer = first + second;
-          questions.push(createQuestion(`${first} + ${second} = __`, answer, uniqueNumbers(() => answer + Math.floor(Math.random() * 7) - 3, answer), 'equation'));
+          easyQuestions.push(createQuestion(`${first} + ${second} = __`, answer, uniqueNumbers(() => answer + Math.floor(Math.random() * 7) - 3, answer), 'equation'));
         }
       }
 
       for (let first = 11; first <= 30; first += 1) {
         for (let second = 1; second <= 9; second += 1) {
           const answer = first + second;
-          questions.push(createQuestion(`${first} + ${second} = __`, answer, uniqueNumbers(() => answer + Math.floor(Math.random() * 9) - 4, answer), 'equation'));
+          easyQuestions.push(createQuestion(`${first} + ${second} = __`, answer, uniqueNumbers(() => answer + Math.floor(Math.random() * 9) - 4, answer), 'equation'));
         }
       }
 
       for (let first = 5; first <= 20; first += 1) {
         for (let second = 1; second <= Math.min(first - 1, 9); second += 1) {
           const answer = first - second;
-          questions.push(createQuestion(`${first} - ${second} = __`, answer, uniqueNumbers(() => answer + Math.floor(Math.random() * 7) - 3, answer), 'equation'));
+          easyQuestions.push(createQuestion(`${first} - ${second} = __`, answer, uniqueNumbers(() => answer + Math.floor(Math.random() * 7) - 3, answer), 'equation'));
         }
       }
 
@@ -979,7 +1052,7 @@
         for (let addend = 1; addend <= 4; addend += 1) {
           const missing = total - addend;
           if (missing >= 0 && missing <= 20) {
-            questions.push(createQuestion(`__ + ${addend} = ${total}`, missing, uniqueNumbers(() => missing + Math.floor(Math.random() * 7) - 3, missing), 'missing'));
+            easyQuestions.push(createQuestion(`__ + ${addend} = ${total}`, missing, uniqueNumbers(() => missing + Math.floor(Math.random() * 7) - 3, missing), 'missing'));
           }
         }
       }
@@ -988,7 +1061,7 @@
         for (let first = 2; first <= 9; first += 1) {
           const second = total - first;
           if (second >= 1 && second <= 10) {
-            questions.push(createQuestion(`${first} + __ = ${total}`, second, uniqueNumbers(() => second + Math.floor(Math.random() * 7) - 3, second), 'missing'));
+            easyQuestions.push(createQuestion(`${first} + __ = ${total}`, second, uniqueNumbers(() => second + Math.floor(Math.random() * 7) - 3, second), 'missing'));
           }
         }
       }
@@ -996,7 +1069,7 @@
       for (let answer = 1; answer <= 15; answer += 1) {
         for (let second = 1; second <= 5; second += 1) {
           const first = answer + second;
-          questions.push(createQuestion(`__ - ${second} = ${answer}`, first, uniqueNumbers(() => first + Math.floor(Math.random() * 7) - 3, first), 'missing'));
+          easyQuestions.push(createQuestion(`__ - ${second} = ${answer}`, first, uniqueNumbers(() => first + Math.floor(Math.random() * 7) - 3, first), 'missing'));
         }
       }
 
@@ -1004,7 +1077,7 @@
         for (let answer = 1; answer < first && answer <= 15; answer += 1) {
           const missing = first - answer;
           if (missing >= 1 && missing <= 10) {
-            questions.push(createQuestion(`${first} - __ = ${answer}`, missing, uniqueNumbers(() => missing + Math.floor(Math.random() * 7) - 3, missing), 'missing'));
+            easyQuestions.push(createQuestion(`${first} - __ = ${answer}`, missing, uniqueNumbers(() => missing + Math.floor(Math.random() * 7) - 3, missing), 'missing'));
           }
         }
       }
@@ -1031,22 +1104,112 @@
           const change = template.change + (index % 2);
           const answer = template.mode === 'subtract' ? start - change : start + change;
           const prompt = `${template.subject} ${start} ${template.item} ${template.action} ${change} ${template.item} ${template.ask}`;
-          questions.push(createQuestion(prompt, answer, uniqueNumbers(() => answer + Math.floor(Math.random() * 9) - 4, answer), 'story', 10));
+          easyQuestions.push(createQuestion(prompt, answer, uniqueNumbers(() => answer + Math.floor(Math.random() * 9) - 4, answer), 'story', 10));
         });
         subtractStoryTemplates.forEach((template, index) => {
           const start = template.start + cycle;
           const change = template.change + (index % 2);
           const answer = start - change;
           const prompt = `${template.subject} ${start} ${template.item} ${template.action} ${change} ${template.item} ${template.ask}`;
-          questions.push(createQuestion(prompt, answer, uniqueNumbers(() => answer + Math.floor(Math.random() * 9) - 4, answer), 'story', 10));
+          easyQuestions.push(createQuestion(prompt, answer, uniqueNumbers(() => answer + Math.floor(Math.random() * 9) - 4, answer), 'story', 10));
         });
       }
 
-      const mixedQuestions = [...fixedQuestions, ...shuffle(questions)].slice(0, 100);
-      return mixedQuestions.map((question) => ({
+      const mediumQuestions = [];
+
+      for (let first = 20; first <= 70; first += 5) {
+        for (let second = 6; second <= 25; second += 3) {
+          const answer = first + second;
+          if (answer <= 100) {
+            mediumQuestions.push(createQuestion(`${first} + ${second} = __`, answer, uniqueNumbers(() => answer + Math.floor(Math.random() * 13) - 6, answer), 'equation'));
+          }
+        }
+      }
+
+      for (let first = 30; first <= 99; first += 3) {
+        for (let second = 6; second <= 40; second += 4) {
+          const answer = first - second;
+          if (answer >= 0) {
+            mediumQuestions.push(createQuestion(`${first} - ${second} = __`, answer, uniqueNumbers(() => answer + Math.floor(Math.random() * 13) - 6, answer), 'equation'));
+          }
+        }
+      }
+
+      for (let total = 25; total <= 90; total += 5) {
+        for (let addend = 7; addend <= 25; addend += 3) {
+          const missing = total - addend;
+          if (missing >= 0) {
+            mediumQuestions.push(createQuestion(`__ + ${addend} = ${total}`, missing, uniqueNumbers(() => missing + Math.floor(Math.random() * 13) - 6, missing), 'missing'));
+          }
+        }
+      }
+
+      for (let answer = 10; answer <= 55; answer += 5) {
+        for (let second = 6; second <= 20; second += 2) {
+          const first = answer + second;
+          if (first <= 100) {
+            mediumQuestions.push(createQuestion(`__ - ${second} = ${answer}`, first, uniqueNumbers(() => first + Math.floor(Math.random() * 13) - 6, first), 'missing'));
+          }
+        }
+      }
+
+      const mediumStoryTemplates = [
+        { subject: 'มีเงินค่าขนม', start: 60, item: 'บาท', action: 'ซื้อสมุดไป', change: 18, ask: 'เหลือกี่บาท' },
+        { subject: 'มีนักเรียนในห้อง', start: 42, item: 'คน', action: 'มาเพิ่มอีก', change: 16, ask: 'รวมเป็นกี่คน' },
+        { subject: 'มีลูกอม', start: 55, item: 'เม็ด', action: 'แจกเพื่อนไป', change: 23, ask: 'เหลือกี่เม็ด' },
+        { subject: 'มีหนังสือ', start: 36, item: 'เล่ม', action: 'ซื้อเพิ่มอีก', change: 19, ask: 'ตอนนี้มีกี่เล่ม' },
+        { subject: 'มีสติกเกอร์', start: 48, item: 'แผ่น', action: 'หายไป', change: 17, ask: 'เหลือกี่แผ่น' }
+      ];
+
+      for (let cycle = 0; cycle < 6; cycle += 1) {
+        mediumStoryTemplates.forEach((template, index) => {
+          const start = template.start + cycle * 2;
+          const change = template.change + index;
+          const isSubtract = template.action === 'ซื้อเพิ่มอีก' || template.action === 'มาเพิ่มอีก' ? false : true;
+          const answer = isSubtract ? start - change : start + change;
+          if (answer >= 0 && answer <= 100) {
+            const prompt = `${template.subject} ${start} ${template.item} ${template.action} ${change} ${template.item} ${template.ask}`;
+            mediumQuestions.push(createQuestion(prompt, answer, uniqueNumbers(() => answer + Math.floor(Math.random() * 15) - 7, answer), 'story', 10));
+          }
+        });
+      }
+
+      const easySet = [...fixedQuestions, ...shuffle(easyQuestions)].slice(0, 100).map((question) => ({
         ...question,
         options: shuffle(question.options).map((option, index) => ({ label: thaiChoices[index], value: option.value }))
       }));
+
+      const mediumSet = shuffle(mediumQuestions).slice(0, 100).map((question) => ({
+        ...question,
+        options: shuffle(question.options).map((option, index) => ({ label: thaiChoices[index], value: option.value }))
+      }));
+
+      return {
+        easy: easySet,
+        medium: mediumSet
+      };
+    }
+
+    function renderDifficultyChoices() {
+      const mathState = appState.math;
+      difficultyChoices.innerHTML = '';
+
+      [
+        { key: 'easy', label: 'ง่าย' },
+        { key: 'medium', label: 'กลาง' }
+      ].forEach((difficulty) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = `difficulty-choice${mathState.selectedDifficulty === difficulty.key ? ' active' : ''}`;
+        button.textContent = difficulty.label;
+        button.addEventListener('click', () => {
+          mathState.selectedDifficulty = difficulty.key;
+          mathState.bank = mathState.banks[difficulty.key];
+          renderDifficultyChoices();
+          prepareMathRound();
+        });
+        difficultyChoices.appendChild(button);
+      });
     }
 
     function switchScreen(screenName) {
@@ -1057,7 +1220,7 @@
       homeButton.style.display = screenName === 'home' ? 'none' : 'inline-flex';
 
       if (screenName === 'flags') {
-        startFlagRound();
+        setFlagGroup(appState.flags.selectedGroup);
       }
 
       if (screenName === 'math') {
@@ -1066,302 +1229,135 @@
       }
     }
 
-    function startFlagRound() {
-      const selected = shuffle(countries).slice(0, 10);
+    function getCountryPoolByGroup(groupName) {
+      if (groupName === 'asean') {
+        return countries.filter((country) => country.group === 'asean');
+      }
+      return countries;
+    }
+
+    function setFlagGroup(groupName) {
       const flagsState = appState.flags;
-      flagsState.currentRound = selected;
-      flagsState.sourceOrder = shuffle(selected);
-      flagsState.targetOrder = shuffle(selected);
-      flagsState.sourceMatches = new Map();
-      flagsState.targetMatches = new Map();
-      flagsState.activeDrag = null;
-      flagsState.previewLine = null;
-      flagsState.selectedSourceCode = null;
+      flagsState.selectedGroup = groupName;
+      chooseAseanButton.classList.toggle('active', groupName === 'asean');
+      chooseWorldButton.classList.toggle('active', groupName === 'world');
+      flagGroupInfo.textContent = `กลุ่ม: ${groupName === 'asean' ? 'อาเซียน' : 'ทั่วโลก'}`;
+      startFlagRound();
+    }
+
+    function startFlagRound() {
+      const flagsState = appState.flags;
+      const pool = getCountryPoolByGroup(flagsState.selectedGroup);
+      const roundCountries = shuffle(pool).slice(0, 10);
+      flagsState.questions = roundCountries.map((country) => {
+        const wrongChoices = shuffle(pool.filter((item) => item.code !== country.code)).slice(0, 3);
+        return {
+          country,
+          choices: shuffle([country, ...wrongChoices])
+        };
+      });
+      flagsState.currentIndex = 0;
+      flagsState.score = 0;
+      flagsState.isLocked = false;
       resultBanner.className = 'result-banner';
       resultBanner.textContent = '';
-      renderFlagBoard();
+      renderFlagQuestion();
       updateFlagStatus();
     }
 
-    function renderFlagBoard() {
+    function renderFlagQuestion() {
       const flagsState = appState.flags;
-      sourceList.innerHTML = '';
-      targetList.innerHTML = '';
-      connections.innerHTML = '';
+      const question = flagsState.questions[flagsState.currentIndex];
 
-      flagsState.sourceOrder.forEach((country, index) => {
-        const sourceItem = document.createElement('div');
-        sourceItem.className = 'source-item';
-        sourceItem.dataset.code = country.code;
-        sourceItem.dataset.color = linePalette[index % linePalette.length];
-        sourceItem.innerHTML = `
-          <span class="flag" aria-hidden="true">${country.flag}</span>
-          <span class="drag-hint">ลากไปหาชื่อประเทศ</span>
-          <span class="match-dot"></span>
-        `;
-        sourceItem.addEventListener('pointerdown', handlePointerDown);
-        sourceItem.addEventListener('click', handleSourceTap);
-        sourceList.appendChild(sourceItem);
-      });
+      if (!question) {
+        sourceList.innerHTML = '';
+        targetList.innerHTML = '<div class="target-item flag-question-card"><div class="target-text"><strong>จบรอบแล้ว</strong><span>กดเริ่มรอบใหม่เพื่อเล่นอีกครั้ง</span></div></div>';
+        return;
+      }
 
-      flagsState.targetOrder.forEach((country) => {
-        const targetItem = document.createElement('div');
-        targetItem.className = 'target-item';
-        targetItem.dataset.code = country.code;
-        targetItem.innerHTML = `
-          <span class="match-dot"></span>
+      targetList.innerHTML = `
+        <div class="target-item flag-question-card">
+          <span class="flag" aria-hidden="true">${question.country.flag}</span>
           <div class="target-text">
-            <strong>${country.thai}</strong>
-            <span>${country.english}</span>
+            <strong>ธงนี้คือประเทศอะไร?</strong>
+            <span>เลือกชื่อประเทศด้านขวา</span>
           </div>
-        `;
-        targetItem.addEventListener('click', handleTargetTap);
-        targetList.appendChild(targetItem);
+        </div>
+      `;
+
+      sourceList.innerHTML = '';
+      question.choices.forEach((choice, index) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'option-button flag-choice-button';
+        button.dataset.code = choice.code;
+        button.innerHTML = `<span class="option-label">${thaiChoices[index]}</span>${choice.thai} (${choice.english})`;
+        button.addEventListener('click', () => handleFlagAnswer(choice.code, button));
+        sourceList.appendChild(button);
       });
     }
 
-    function isCompactLayout() {
-      return window.innerWidth <= 700;
-    }
-
-    function handleSourceTap(event) {
-      if (!isCompactLayout()) {
-        return;
-      }
-      const sourceCode = event.currentTarget.dataset.code;
+    function handleFlagAnswer(selectedCode, selectedButton) {
       const flagsState = appState.flags;
-      flagsState.selectedSourceCode = flagsState.selectedSourceCode === sourceCode ? null : sourceCode;
-      updateMatchedClasses();
-    }
-
-    function handleTargetTap(event) {
-      if (!isCompactLayout()) {
-        return;
-      }
-      const flagsState = appState.flags;
-      if (!flagsState.selectedSourceCode) {
-        return;
-      }
-      assignMatch(flagsState.selectedSourceCode, event.currentTarget.dataset.code);
-      flagsState.selectedSourceCode = null;
-      updateFlagStatus();
-    }
-
-    function handlePointerDown(event) {
-      const sourceItem = event.currentTarget;
-      const flagsState = appState.flags;
-      if (isCompactLayout()) {
-        return;
-      }
-      event.preventDefault();
-      clearMatchFromSource(sourceItem.dataset.code);
-
-      flagsState.activeDrag = {
-        sourceCode: sourceItem.dataset.code,
-        sourceElement: sourceItem,
-        color: sourceItem.dataset.color,
-        pointerId: event.pointerId
-      };
-
-      sourceItem.classList.add('dragging');
-      try {
-        sourceItem.setPointerCapture(event.pointerId);
-      } catch (_error) {
-      }
-      flagsState.previewLine = createLine(flagsState.activeDrag.color, true);
-      drawPreviewLine(event.clientX, event.clientY);
-
-      window.addEventListener('pointermove', handlePointerMove);
-      window.addEventListener('pointerup', handlePointerUp);
-      window.addEventListener('pointercancel', handlePointerUp);
-    }
-
-    function handlePointerMove(event) {
-      if (!appState.flags.activeDrag) {
-        return;
-      }
-      drawPreviewLine(event.clientX, event.clientY);
-      highlightTargetAtPoint(event.clientX, event.clientY);
-    }
-
-    function handlePointerUp(event) {
-      const flagsState = appState.flags;
-      if (!flagsState.activeDrag) {
+      if (flagsState.isLocked) {
         return;
       }
 
-      const sourceElement = flagsState.activeDrag.sourceElement;
-      clearHighlights();
-      const dropTarget = findTargetAtPoint(event.clientX, event.clientY);
-      if (dropTarget) {
-        assignMatch(flagsState.activeDrag.sourceCode, dropTarget.dataset.code);
+      const question = flagsState.questions[flagsState.currentIndex];
+      if (!question) {
+        return;
       }
 
-      if (flagsState.previewLine) {
-        flagsState.previewLine.remove();
-        flagsState.previewLine = null;
+      flagsState.isLocked = true;
+      const isCorrect = selectedCode === question.country.code;
+      if (isCorrect) {
+        flagsState.score += 1;
       }
 
-      sourceElement.classList.remove('dragging');
-      try {
-        if (sourceElement.hasPointerCapture(flagsState.activeDrag.pointerId)) {
-          sourceElement.releasePointerCapture(flagsState.activeDrag.pointerId);
+      Array.from(sourceList.querySelectorAll('button')).forEach((button) => {
+        button.disabled = true;
+        if (button.dataset.code === question.country.code) {
+          button.classList.add('correct');
         }
-      } catch (_error) {
-      }
-
-      flagsState.activeDrag = null;
-      window.removeEventListener('pointermove', handlePointerMove);
-      window.removeEventListener('pointerup', handlePointerUp);
-      window.removeEventListener('pointercancel', handlePointerUp);
-      redrawConnections();
-      updateFlagStatus();
-    }
-
-    function findTargetAtPoint(clientX, clientY) {
-      const element = document.elementFromPoint(clientX, clientY);
-      return element ? element.closest('.target-item') : null;
-    }
-
-    function highlightTargetAtPoint(clientX, clientY) {
-      clearHighlights();
-      const targetElement = findTargetAtPoint(clientX, clientY);
-      if (targetElement) {
-        targetElement.classList.add('highlight');
-      }
-    }
-
-    function clearHighlights() {
-      targetList.querySelectorAll('.highlight').forEach((item) => item.classList.remove('highlight'));
-    }
-
-    function assignMatch(sourceCode, targetCode) {
-      clearMatchFromSource(sourceCode);
-      clearMatchFromTarget(targetCode);
-      appState.flags.sourceMatches.set(sourceCode, targetCode);
-      appState.flags.targetMatches.set(targetCode, sourceCode);
-      updateMatchedClasses();
-    }
-
-    function clearMatchFromSource(sourceCode) {
-      const flagsState = appState.flags;
-      if (!flagsState.sourceMatches.has(sourceCode)) {
-        return;
-      }
-      const targetCode = flagsState.sourceMatches.get(sourceCode);
-      flagsState.sourceMatches.delete(sourceCode);
-      if (flagsState.targetMatches.get(targetCode) === sourceCode) {
-        flagsState.targetMatches.delete(targetCode);
-      }
-      updateMatchedClasses();
-    }
-
-    function clearMatchFromTarget(targetCode) {
-      const flagsState = appState.flags;
-      if (!flagsState.targetMatches.has(targetCode)) {
-        return;
-      }
-      const sourceCode = flagsState.targetMatches.get(targetCode);
-      flagsState.targetMatches.delete(targetCode);
-      if (flagsState.sourceMatches.get(sourceCode) === targetCode) {
-        flagsState.sourceMatches.delete(sourceCode);
-      }
-      updateMatchedClasses();
-    }
-
-    function updateMatchedClasses() {
-      const flagsState = appState.flags;
-      sourceList.querySelectorAll('.source-item').forEach((item) => {
-        item.style.borderColor = flagsState.sourceMatches.has(item.dataset.code) ? item.dataset.color : 'transparent';
-        item.classList.toggle('selected', flagsState.selectedSourceCode === item.dataset.code);
       });
-      targetList.querySelectorAll('.target-item').forEach((item) => {
-        item.classList.toggle('matched', flagsState.targetMatches.has(item.dataset.code));
-      });
-    }
-
-    function createLine(color, isPreview = false) {
-      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-      line.setAttribute('stroke', color);
-      line.dataset.preview = isPreview ? 'true' : 'false';
-      connections.appendChild(line);
-      return line;
-    }
-
-    function getBoardPoint(clientX, clientY) {
-      const rect = board.getBoundingClientRect();
-      return { x: clientX - rect.left, y: clientY - rect.top };
-    }
-
-    function getAnchorPoint(element, side) {
-      const rect = element.getBoundingClientRect();
-      const boardRect = board.getBoundingClientRect();
-      return {
-        x: side === 'right' ? rect.right - boardRect.left : rect.left - boardRect.left,
-        y: rect.top - boardRect.top + rect.height / 2
-      };
-    }
-
-    function drawPreviewLine(clientX, clientY) {
-      const flagsState = appState.flags;
-      if (!flagsState.activeDrag || !flagsState.previewLine) {
-        return;
+      if (!isCorrect && selectedButton) {
+        selectedButton.classList.add('wrong');
       }
-      setLinePosition(flagsState.previewLine, getAnchorPoint(flagsState.activeDrag.sourceElement, 'right'), getBoardPoint(clientX, clientY));
-    }
 
-    function setLinePosition(line, start, end) {
-      line.setAttribute('x1', String(start.x));
-      line.setAttribute('y1', String(start.y));
-      line.setAttribute('x2', String(end.x));
-      line.setAttribute('y2', String(end.y));
-    }
+      flagActionText.textContent = isCorrect ? 'ถูกต้อง ไปข้อถัดไป' : `คำตอบที่ถูกคือ ${question.country.thai}`;
 
-    function redrawConnections() {
-      const flagsState = appState.flags;
-      connections.querySelectorAll('line[data-preview="false"]').forEach((line) => line.remove());
-      if (window.innerWidth <= 700 || appState.activeScreen !== 'flags') {
-        return;
-      }
-      flagsState.sourceMatches.forEach((targetCode, sourceCode) => {
-        const sourceElement = sourceList.querySelector(`[data-code="${sourceCode}"]`);
-        const targetElement = targetList.querySelector(`[data-code="${targetCode}"]`);
-        if (!sourceElement || !targetElement) {
-          return;
-        }
-        const line = createLine(sourceElement.dataset.color);
-        setLinePosition(line, getAnchorPoint(sourceElement, 'right'), getAnchorPoint(targetElement, 'left'));
-      });
+      window.setTimeout(() => {
+        flagsState.currentIndex += 1;
+        flagsState.isLocked = false;
+        renderFlagQuestion();
+        updateFlagStatus();
+      }, 900);
     }
 
     function updateFlagStatus() {
       const flagsState = appState.flags;
-      const matchedCount = flagsState.sourceMatches.size;
-      let correctCount = 0;
-      flagsState.sourceMatches.forEach((targetCode, sourceCode) => {
-        if (sourceCode === targetCode) {
-          correctCount += 1;
-        }
-      });
+      const total = flagsState.questions.length;
+      const answered = Math.min(flagsState.currentIndex, total);
 
-      roundInfo.textContent = `สุ่มคำถาม ${flagsState.currentRound.length} ข้อ`;
-      progressInfo.textContent = `จับคู่แล้ว ${matchedCount} / ${flagsState.currentRound.length}`;
-      scoreValue.textContent = `คะแนน: ${correctCount} / ${flagsState.currentRound.length}`;
+      roundInfo.textContent = `สุ่มคำถาม ${total} ข้อ`;
+      progressInfo.textContent = total > 0 ? `ข้อที่ ${Math.min(flagsState.currentIndex + 1, total)} / ${total}` : 'ข้อที่ 0 / 0';
+      scoreValue.textContent = `คะแนน: ${flagsState.score} / ${total}`;
 
-      if (matchedCount === flagsState.currentRound.length && flagsState.currentRound.length > 0) {
-        scoreSummary.textContent = `คุณตอบถูก ${correctCount} จาก ${flagsState.currentRound.length} ข้อ`;
-        statusBadge.textContent = correctCount === flagsState.currentRound.length ? 'สมบูรณ์แบบ' : 'เสร็จสิ้น';
-        resultBanner.textContent = `${correctCount === flagsState.currentRound.length ? 'เก่งมาก จับคู่ถูกครบทุกข้อ' : 'จับคู่ครบแล้ว'} คะแนนรวม ${correctCount} / ${flagsState.currentRound.length}`;
+      if (answered >= total && total > 0) {
+        scoreSummary.textContent = `คุณตอบถูก ${flagsState.score} จาก ${total} ข้อ`;
+        statusBadge.textContent = flagsState.score === total ? 'สมบูรณ์แบบ' : 'เสร็จสิ้น';
+        resultBanner.textContent = `${flagsState.score === total ? 'เก่งมาก ตอบถูกครบทุกข้อ' : 'จบรอบแล้ว'} คะแนนรวม ${flagsState.score} / ${total}`;
         resultBanner.className = 'result-banner show';
+        flagActionText.textContent = 'จบรอบแล้ว กดเริ่มรอบใหม่ได้เลย';
       } else {
-        scoreSummary.textContent = 'ยังจับคู่ไม่ครบ ลองต่อเส้นให้ครบทั้ง 10 ข้อ';
-        statusBadge.textContent = matchedCount === 0 ? 'พร้อมเล่น' : 'กำลังเล่น';
+        scoreSummary.textContent = 'ดูธงแล้วกดชื่อประเทศที่ถูกต้องทีละข้อ';
+        statusBadge.textContent = answered === 0 ? 'พร้อมเล่น' : 'กำลังเล่น';
         resultBanner.className = 'result-banner';
         resultBanner.textContent = '';
+        if (!flagsState.isLocked) {
+          flagActionText.textContent = 'ดูธงแล้วเลือกชื่อประเทศด้านขวา';
+        }
       }
-
-      updateMatchedClasses();
-      redrawConnections();
     }
 
     function renderTimeChoices() {
@@ -1385,6 +1381,9 @@
     function prepareMathRound() {
       stopMathTimers();
       const mathState = appState.math;
+      if (!mathState.bank.length) {
+        mathState.bank = mathState.banks[mathState.selectedDifficulty] || [];
+      }
       mathState.round = shuffle(mathState.bank).slice(0, 10).map((question) => ({
         ...question,
         options: shuffle(question.options).map((option, index) => ({ label: thaiChoices[index], value: option.value }))
@@ -1557,7 +1556,7 @@
       const currentDisplay = mathState.currentIndex >= 0 ? Math.min(mathState.currentIndex + 1, 10) : 0;
       mathProgress.textContent = `ข้อที่ ${currentDisplay} / 10`;
       mathScore.textContent = `คะแนน: ${mathState.score}`;
-      mathQuestionPool.textContent = `คลังโจทย์ ${mathState.bank.length} ข้อ`;
+      mathQuestionPool.textContent = `ระดับ${mathState.selectedDifficulty === 'easy' ? 'ง่าย' : 'กลาง'} ${mathState.bank.length} ข้อ`;
     }
 
     function finishMathRound() {
@@ -1577,13 +1576,14 @@
       mathResultBanner.className = 'result-banner show';
     }
 
-    window.addEventListener('resize', redrawConnections);
     homeButton.addEventListener('click', () => {
       stopMathTimers();
       switchScreen('home');
     });
     openFlagsGame.addEventListener('click', () => switchScreen('flags'));
     openMathGame.addEventListener('click', () => switchScreen('math'));
+    chooseAseanButton.addEventListener('click', () => setFlagGroup('asean'));
+    chooseWorldButton.addEventListener('click', () => setFlagGroup('world'));
     resetFlagsButton.addEventListener('click', startFlagRound);
     startMathButton.addEventListener('click', () => {
       prepareMathRound();
@@ -1591,7 +1591,9 @@
     });
     resetMathButton.addEventListener('click', prepareMathRound);
 
-    appState.math.bank = buildMathBank();
+    appState.math.banks = buildMathBanks();
+    appState.math.bank = appState.math.banks[appState.math.selectedDifficulty];
+    renderDifficultyChoices();
     renderTimeChoices();
     prepareMathRound();
     switchScreen('home');
