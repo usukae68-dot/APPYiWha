@@ -645,6 +645,16 @@
       line-height: 1.2;
     }
 
+    .blank-box {
+      display: inline-block;
+      min-width: 1.6em;
+      padding: 0 10px;
+      border: 3px solid #e63946;
+      border-radius: 8px;
+      color: #e63946;
+      font-weight: 700;
+    }
+
     .story-question .math-question-text {
       font-size: clamp(1.35rem, 3.6vw, 2rem);
       line-height: 1.35;
@@ -807,7 +817,7 @@
           <h3>เกมบวกลบเลข ป.1 (เติมคำตอบ)</h3>
           <p>โจทย์บวกลบแบบเติมช่องว่าง ตัวเลขไม่เกิน 500 สลับตำแหน่งช่องว่างหลากหลายรูปแบบ สุ่มเล่นครั้งละ 10 ข้อ เลือกได้ว่าจะจับเวลาหรือไม่</p>
           <div class="chip-row">
-            <div class="pill">คลังโจทย์ 300 ข้อ</div>
+            <div class="pill">คลังโจทย์ 400 ข้อ</div>
             <div class="pill">ตอบ 3 ตัวเลือก</div>
           </div>
           <div class="pill-row">
@@ -913,7 +923,7 @@
           <p class="subcopy">เลือกว่าจะจับเวลาทั้งรอบ (10 ข้อ) หรือไม่จับเวลา</p>
           <div class="setup-options" id="addSubTimeChoices"></div>
           <div class="status-strip">
-            <div class="pill" id="addSubQuestionPool">คลังโจทย์ 300 ข้อ</div>
+            <div class="pill" id="addSubQuestionPool">คลังโจทย์ 400 ข้อ</div>
             <div class="pill">เล่นรอบละ 10 ข้อ</div>
           </div>
           <div class="pill-row" style="margin-top: 14px;">
@@ -1292,9 +1302,12 @@
       const types = ['sumUnknown', 'addFirstUnknown', 'addSecondUnknown', 'diffUnknown', 'minuendUnknown', 'subtrahendUnknown'];
       let guard = 0;
 
+      const blankBox = '<span class="blank-box">____</span>';
+
       while (bank.length < target && guard < target * 60) {
         guard += 1;
         const type = types[randomInt(0, types.length - 1)];
+        let dedupeKey = '';
         let prompt = '';
         let answer = 0;
 
@@ -1302,39 +1315,87 @@
           const a = randomInt(1, 490);
           const b = randomInt(1, 500 - a);
           answer = a + b;
-          prompt = `${a} + ${b} = ____`;
+          dedupeKey = `${a} + ${b} = ____`;
+          prompt = `${a} + ${b} = ${blankBox}`;
         } else if (type === 'addFirstUnknown') {
           const b = randomInt(1, 490);
           const c = randomInt(b + 1, 500);
           answer = c - b;
-          prompt = `____ + ${b} = ${c}`;
+          dedupeKey = `____ + ${b} = ${c}`;
+          prompt = `${blankBox} + ${b} = ${c}`;
         } else if (type === 'addSecondUnknown') {
           const a = randomInt(1, 490);
           const c = randomInt(a + 1, 500);
           answer = c - a;
-          prompt = `${a} + ____ = ${c}`;
+          dedupeKey = `${a} + ____ = ${c}`;
+          prompt = `${a} + ${blankBox} = ${c}`;
         } else if (type === 'diffUnknown') {
           const a = randomInt(1, 500);
           const b = randomInt(0, a);
           answer = a - b;
-          prompt = `${a} - ${b} = ____`;
+          dedupeKey = `${a} - ${b} = ____`;
+          prompt = `${a} - ${b} = ${blankBox}`;
         } else if (type === 'minuendUnknown') {
           const b = randomInt(1, 500);
           const c = randomInt(0, 500 - b);
           answer = b + c;
-          prompt = `____ - ${b} = ${c}`;
+          dedupeKey = `____ - ${b} = ${c}`;
+          prompt = `${blankBox} - ${b} = ${c}`;
         } else {
           const a = randomInt(1, 500);
           const c = randomInt(0, a);
           answer = a - c;
-          prompt = `${a} - ____ = ${c}`;
+          dedupeKey = `${a} - ____ = ${c}`;
+          prompt = `${a} - ${blankBox} = ${c}`;
         }
 
-        if (seen.has(prompt)) {
+        if (seen.has(dedupeKey)) {
           continue;
         }
-        seen.add(prompt);
+        seen.add(dedupeKey);
 
+        const options = buildAddSubDistractors(answer).map((value, index) => ({ label: thaiChoices[index], value }));
+        bank.push({ prompt, answer, options });
+      }
+
+      return bank;
+    }
+
+    function buildChainAddSubBank(target = 100) {
+      const bank = [];
+      const seen = new Set();
+      const blankBox = '<span class="blank-box">____</span>';
+      let guard = 0;
+
+      while (bank.length < target && guard < target * 80) {
+        guard += 1;
+        const op1 = Math.random() < 0.5 ? '+' : '-';
+        const op2 = Math.random() < 0.5 ? '+' : '-';
+
+        const num1 = randomInt(1, 500);
+        const num2 = op1 === '+' ? randomInt(1, Math.max(500 - num1, 1)) : randomInt(1, num1);
+        const step1 = op1 === '+' ? num1 + num2 : num1 - num2;
+        if (step1 < 0 || step1 > 500) {
+          continue;
+        }
+
+        const num3 = op2 === '+' ? randomInt(1, Math.max(500 - step1, 1)) : randomInt(1, Math.max(step1, 1));
+        const final = op2 === '+' ? step1 + num3 : step1 - num3;
+        if (final < 0 || final > 500) {
+          continue;
+        }
+
+        const numbers = [num1, num2, num3];
+        const blankIndex = randomInt(0, 2);
+        const answer = numbers[blankIndex];
+        const displayValues = numbers.map((value, index) => (index === blankIndex ? blankBox : String(value)));
+        const dedupeKey = `${numbers.join(',')}|${op1}${op2}|${blankIndex}`;
+        if (seen.has(dedupeKey)) {
+          continue;
+        }
+        seen.add(dedupeKey);
+
+        const prompt = `${displayValues[0]} ${op1} ${displayValues[1]} ${op2} ${displayValues[2]} = ${final}`;
         const options = buildAddSubDistractors(answer).map((value, index) => ({ label: thaiChoices[index], value }));
         bank.push({ prompt, answer, options });
       }
@@ -1970,7 +2031,7 @@
     renderDifficultyChoices();
     renderTimeChoices();
     prepareMathRound();
-    appState.addSub.bank = buildAddSubBank(300);
+    appState.addSub.bank = buildAddSubBank(300).concat(buildChainAddSubBank(100));
     renderAddSubTimeChoices();
     prepareAddSubRound();
     switchScreen('home');
