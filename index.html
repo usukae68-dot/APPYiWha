@@ -907,7 +907,7 @@
           <p class="subcopy">เลือกเวลาต่อข้อ เด็กจะได้เวลาเพิ่ม 10 วินาทีอัตโนมัติเมื่อเจอโจทย์คำอ่านยาว</p>
           <div class="subcopy" style="margin-top: 10px;">เลือกระดับความยาก</div>
           <div class="setup-options" id="difficultyChoices"></div>
-          <div class="subcopy" id="logicTypeLabel" style="margin-top: 4px;">เลือกหมวดโจทย์ระดับยาก (เลือกได้มากกว่า 1)</div>
+          <div class="subcopy" id="logicTypeLabel" style="margin-top: 4px;">เลือกหมวดโจทย์คิดวิเคราะห์ที่จะสุ่มมา ใช้ได้ทุกระดับ (เลือกได้มากกว่า 1)</div>
           <div class="logic-type-options" id="logicTypeChoices"></div>
           <div class="subcopy" style="margin-top: 4px;">เลือกเวลาต่อข้อ</div>
           <div class="setup-options" id="timeChoices"></div>
@@ -1396,7 +1396,32 @@
       return shuffle([...options]);
     }
 
-    function buildLogicBank(target = 100) {
+    const logicScaleConfig = {
+      easy: {
+        given: [1, 15], remain: [1, 20], infoTotal: [8, 30],
+        trickStart: [8, 20], seqStart: [1, 10], seqStep: [1, 3],
+        oddRange: 30, oddMultBase: [2, 10],
+        chainBase: [3, 15], chainDiff1: [1, 5], chainDiff2: [1, 4],
+        splitTotal: [4, 20], numericMax: 80
+      },
+      medium: {
+        given: [2, 30], remain: [2, 60], infoTotal: [10, 60],
+        trickStart: [10, 40], seqStart: [1, 20], seqStep: [2, 6],
+        oddRange: 60, oddMultBase: [2, 20],
+        chainBase: [5, 30], chainDiff1: [2, 10], chainDiff2: [1, 8],
+        splitTotal: [4, 60], numericMax: 200
+      },
+      hard: {
+        given: [10, 60], remain: [10, 100], infoTotal: [30, 150],
+        trickStart: [20, 80], seqStart: [5, 40], seqStep: [3, 9],
+        oddRange: 120, oddMultBase: [2, 30],
+        chainBase: [15, 60], chainDiff1: [5, 20], chainDiff2: [3, 15],
+        splitTotal: [10, 100], numericMax: 400
+      }
+    };
+
+    function buildLogicBank(target = 100, scaleKey = 'medium') {
+      const config = logicScaleConfig[scaleKey];
       const bank = [];
       const seen = new Set();
       const types = ['reverse', 'infoSelect', 'trick', 'sequence', 'oddOneOut', 'chain', 'multiSplit'];
@@ -1417,11 +1442,11 @@
             { subject: 'ป้า', item: 'ขนม', unit: 'ชิ้น', receiver: 'หลาน', verb: 'ให้' }
           ];
           const scenario = scenarios[randomInt(0, scenarios.length - 1)];
-          const given = randomInt(2, 30);
-          const remain = randomInt(2, 60);
+          const given = randomInt(config.given[0], config.given[1]);
+          const remain = randomInt(config.remain[0], config.remain[1]);
           answer = given + remain;
           prompt = `${scenario.subject}มี${scenario.item}อยู่จำนวนหนึ่ง ${scenario.verb}${scenario.receiver}ไป ${given} ${scenario.unit} เหลือ ${remain} ${scenario.unit} เดิม${scenario.subject}มี${scenario.item}กี่${scenario.unit}?`;
-          options = buildNumericOptions(answer, 4, 200);
+          options = buildNumericOptions(answer, 4, config.numericMax);
         } else if (type === 'infoSelect') {
           const scenarios = [
             { container: 'กล่อง', item: 'ดินสอ', unit: 'แท่ง', colorA: 'สีแดง', colorB: 'สีฟ้า' },
@@ -1429,11 +1454,11 @@
             { container: 'ตะกร้า', item: 'ดอกไม้', unit: 'ดอก', colorA: 'สีเหลือง', colorB: 'สีชมพู' }
           ];
           const scenario = scenarios[randomInt(0, scenarios.length - 1)];
-          const total = randomInt(10, 60);
+          const total = randomInt(config.infoTotal[0], config.infoTotal[1]);
           const part = randomInt(1, total - 1);
           answer = total - part;
           prompt = `ใน${scenario.container}มี${scenario.item} ${total} ${scenario.unit} เป็น${scenario.colorA} ${part} ${scenario.unit} ที่เหลือเป็น${scenario.colorB} ${scenario.colorB}มีกี่${scenario.unit}?`;
-          options = buildNumericOptions(answer, 4, 200);
+          options = buildNumericOptions(answer, 4, config.numericMax);
         } else if (type === 'trick') {
           const scenarios = [
             { item: 'สติกเกอร์', unit: 'ดวง' },
@@ -1441,28 +1466,28 @@
             { item: 'ดินสอสี', unit: 'แท่ง' }
           ];
           const scenario = scenarios[randomInt(0, scenarios.length - 1)];
-          const start = randomInt(10, 40);
+          const start = randomInt(config.trickStart[0], config.trickStart[1]);
           const give = randomInt(1, start - 1);
           const receiveBack = randomInt(1, 10);
           answer = start - give + receiveBack;
           prompt = `น้องมี${scenario.item} ${start} ${scenario.unit} แบ่งให้เพื่อนไป ${give} ${scenario.unit} แล้วเพื่อนนำ${scenario.item}มาคืนให้ ${receiveBack} ${scenario.unit} ตอนนี้น้องมี${scenario.item}กี่${scenario.unit}?`;
-          options = buildNumericOptions(answer, 4, 200);
+          options = buildNumericOptions(answer, 4, config.numericMax);
         } else if (type === 'sequence') {
-          const start = randomInt(1, 20);
-          const step = randomInt(2, 6);
+          const start = randomInt(config.seqStart[0], config.seqStart[1]);
+          const step = randomInt(config.seqStep[0], config.seqStep[1]);
           const terms = [start, start + step, start + 2 * step, start + 3 * step];
           answer = start + 4 * step;
           prompt = `${terms.join(', ')}, ____ ตัวเลขต่อไปคือเลขอะไร?`;
-          options = buildNumericOptions(answer, 4, 200);
+          options = buildNumericOptions(answer, 4, config.numericMax);
         } else if (type === 'oddOneOut') {
           const divisor = [2, 3, 5][randomInt(0, 2)];
           const multiples = new Set();
           while (multiples.size < 3) {
-            multiples.add(divisor * randomInt(2, 20));
+            multiples.add(divisor * randomInt(config.oddMultBase[0], config.oddMultBase[1]));
           }
-          let odd = randomInt(2, 60);
+          let odd = randomInt(2, config.oddRange);
           while (odd % divisor === 0) {
-            odd = randomInt(2, 60);
+            odd = randomInt(2, config.oddRange);
           }
           answer = odd;
           const numberList = shuffle([odd, ...multiples]);
@@ -1475,18 +1500,18 @@
             { a: 'ครู', b: 'นักเรียน', c: 'ภารโรง', item: 'ดินสอ', unit: 'แท่ง' }
           ];
           const scenario = scenarios[randomInt(0, scenarios.length - 1)];
-          const base = randomInt(5, 30);
-          const diff1 = randomInt(2, 10);
-          const diff2 = randomInt(1, 8);
+          const base = randomInt(config.chainBase[0], config.chainBase[1]);
+          const diff1 = randomInt(config.chainDiff1[0], config.chainDiff1[1]);
+          const diff2 = randomInt(config.chainDiff2[0], config.chainDiff2[1]);
           const middle = base + diff1;
           answer = middle - diff2;
           prompt = `${scenario.a}มี${scenario.item} ${base} ${scenario.unit} ${scenario.b}มี${scenario.item}มากกว่า${scenario.a} ${diff1} ${scenario.unit} ${scenario.c}มี${scenario.item}น้อยกว่า${scenario.b} ${diff2} ${scenario.unit} ${scenario.c}มี${scenario.item}กี่${scenario.unit}?`;
-          options = buildNumericOptions(answer, 4, 200);
+          options = buildNumericOptions(answer, 4, config.numericMax);
         } else if (type === 'multiSplit') {
-          const total = randomInt(4, 60);
+          const total = randomInt(config.splitTotal[0], config.splitTotal[1]);
           answer = Math.floor(total / 2);
           prompt = `มีลูกบอล ${total} ลูก แบ่งใส่กล่อง 2 ใบ โดยแต่ละกล่องต้องมีลูกบอลอย่างน้อย 1 ลูก แบ่งได้ทั้งหมดกี่แบบ (นับ 1+9 กับ 9+1 เป็นแบบเดียวกัน)?`;
-          options = buildNumericOptions(answer, 4, 60);
+          options = buildNumericOptions(answer, 4, Math.max(config.splitTotal[1], 20));
         }
 
         if (seen.has(prompt)) {
@@ -1502,16 +1527,15 @@
       return bank;
     }
 
-    function getHardBank() {
+    function getFilteredBankForDifficulty(tier) {
       const mathState = appState.math;
-      return mathState.banks.hard.filter((question) => mathState.selectedLogicTypes.has(question.subType));
+      return mathState.banks[tier].filter((question) => !question.subType || mathState.selectedLogicTypes.has(question.subType));
     }
 
     function renderLogicTypeChoices() {
       const mathState = appState.math;
-      const isHard = mathState.selectedDifficulty === 'hard';
-      logicTypeLabel.classList.toggle('show', isHard);
-      logicTypeChoices.classList.toggle('show', isHard);
+      logicTypeLabel.classList.add('show');
+      logicTypeChoices.classList.add('show');
       logicTypeChoices.innerHTML = '';
 
       Object.entries(logicTypeLabels).forEach(([key, label]) => {
@@ -1529,10 +1553,8 @@
             checkbox.checked = true;
             return;
           }
-          if (mathState.selectedDifficulty === 'hard') {
-            mathState.bank = getHardBank();
-            prepareMathRound();
-          }
+          mathState.bank = getFilteredBankForDifficulty(mathState.selectedDifficulty);
+          prepareMathRound();
         });
         option.appendChild(checkbox);
         option.appendChild(document.createTextNode(label));
@@ -1555,7 +1577,7 @@
         button.textContent = difficulty.label;
         button.addEventListener('click', () => {
           mathState.selectedDifficulty = difficulty.key;
-          mathState.bank = difficulty.key === 'hard' ? getHardBank() : mathState.banks[difficulty.key];
+          mathState.bank = getFilteredBankForDifficulty(difficulty.key);
           renderDifficultyChoices();
           renderLogicTypeChoices();
           prepareMathRound();
@@ -1734,7 +1756,7 @@
       stopMathTimers();
       const mathState = appState.math;
       if (!mathState.bank.length) {
-        mathState.bank = mathState.banks[mathState.selectedDifficulty] || [];
+        mathState.bank = getFilteredBankForDifficulty(mathState.selectedDifficulty);
       }
       mathState.round = shuffle(mathState.bank).slice(0, 10).map((question) => ({
         ...question,
@@ -1948,11 +1970,13 @@
     resetMathButton.addEventListener('click', prepareMathRound);
 
     appState.math.banks = buildMathBanks();
+    appState.math.banks.easy = appState.math.banks.easy.concat(buildLogicBank(50, 'easy'));
     appState.math.banks.medium = appState.math.banks.medium.concat(
-      buildAddSubBank(300).concat(buildChainAddSubBank(100)).map((question) => ({ ...question, type: 'equation', extraTime: 0 }))
+      buildAddSubBank(300).concat(buildChainAddSubBank(100)).map((question) => ({ ...question, type: 'equation', extraTime: 0 })),
+      buildLogicBank(50, 'medium')
     );
-    appState.math.banks.hard = buildLogicBank(100);
-    appState.math.bank = appState.math.banks[appState.math.selectedDifficulty];
+    appState.math.banks.hard = buildLogicBank(100, 'hard');
+    appState.math.bank = getFilteredBankForDifficulty(appState.math.selectedDifficulty);
     renderDifficultyChoices();
     renderLogicTypeChoices();
     renderTimeChoices();
