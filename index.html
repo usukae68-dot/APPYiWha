@@ -599,6 +599,43 @@
       box-shadow: 0 10px 20px rgba(255, 122, 162, 0.28);
     }
 
+    #logicTypeLabel {
+      display: none;
+    }
+
+    #logicTypeLabel.show {
+      display: block;
+    }
+
+    .logic-type-options {
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      margin: 10px 0;
+    }
+
+    .logic-type-options.show {
+      display: flex;
+    }
+
+    .logic-type-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border-radius: 14px;
+      background: white;
+      box-shadow: inset 0 0 0 2px rgba(255, 122, 162, 0.14);
+      font-size: 0.92rem;
+      cursor: pointer;
+    }
+
+    .logic-type-option input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--coral-strong);
+    }
+
     .countdown {
       display: none;
       min-height: 120px;
@@ -805,7 +842,7 @@
           <p>รวมโจทย์บวกลบ โจทย์เติมคำตอบ และโจทย์คิดวิเคราะห์สำหรับเด็ก ป.1 ไว้ในเกมเดียว สุ่มเล่นครั้งละ 10 ข้อ เลือกระดับและเวลาต่อข้อได้ก่อนเริ่มเกม</p>
           <div class="chip-row">
             <div class="pill">คลังโจทย์ 700 ข้อ</div>
-            <div class="pill">4 ระดับให้เลือก</div>
+            <div class="pill">3 ระดับ ง่าย/กลาง/ยาก</div>
           </div>
           <div class="pill-row">
             <button id="openMathGame" type="button">เริ่มเกมบวกเลข</button>
@@ -870,6 +907,8 @@
           <p class="subcopy">เลือกเวลาต่อข้อ เด็กจะได้เวลาเพิ่ม 10 วินาทีอัตโนมัติเมื่อเจอโจทย์คำอ่านยาว</p>
           <div class="subcopy" style="margin-top: 10px;">เลือกระดับความยาก</div>
           <div class="setup-options" id="difficultyChoices"></div>
+          <div class="subcopy" id="logicTypeLabel" style="margin-top: 4px;">เลือกหมวดโจทย์ระดับยาก (เลือกได้มากกว่า 1)</div>
+          <div class="logic-type-options" id="logicTypeChoices"></div>
           <div class="subcopy" style="margin-top: 4px;">เลือกเวลาต่อข้อ</div>
           <div class="setup-options" id="timeChoices"></div>
           <div class="status-strip">
@@ -930,8 +969,17 @@
 
     const linePalette = ['#3a86ff', '#ff7b54', '#43aa8b', '#ffb703', '#9b5de5', '#ef476f', '#06d6a0', '#118ab2', '#fb8500', '#6a994e'];
     const thaiChoices = ['ก', 'ข', 'ค', 'ง'];
-    const mathBaseTimes = [5, 10, 15, 30];
-    const difficultyLabels = { easy: 'ง่าย', medium: 'กลาง', fillBlank: 'เติมคำตอบ', hard: 'คิดวิเคราะห์' };
+    const mathBaseTimes = [0, 5, 10, 15, 30];
+    const difficultyLabels = { easy: 'ง่าย', medium: 'กลาง', hard: 'ยาก' };
+    const logicTypeLabels = {
+      reverse: 'คิดย้อนกลับ',
+      infoSelect: 'มีข้อมูลที่ต้องเลือกใช้',
+      trick: 'โจทย์หลอกนิด ๆ',
+      sequence: 'เติมจำนวนที่หายไป',
+      oddOneOut: 'หาเลขที่ไม่เข้าพวก',
+      chain: 'ใครมีมากกว่า?',
+      multiSplit: 'โจทย์ที่มีได้หลายคำตอบ'
+    };
 
     const appState = {
       activeScreen: 'home',
@@ -945,10 +993,10 @@
       math: {
         baseTime: 30,
         selectedDifficulty: 'easy',
+        selectedLogicTypes: new Set(['reverse', 'infoSelect', 'trick', 'sequence', 'oddOneOut', 'chain', 'multiSplit']),
         banks: {
           easy: [],
           medium: [],
-          fillBlank: [],
           hard: []
         },
         bank: [],
@@ -988,6 +1036,8 @@
     const resetFlagsButton = document.getElementById('resetFlagsButton');
     const timeChoices = document.getElementById('timeChoices');
     const difficultyChoices = document.getElementById('difficultyChoices');
+    const logicTypeLabel = document.getElementById('logicTypeLabel');
+    const logicTypeChoices = document.getElementById('logicTypeChoices');
     const startMathButton = document.getElementById('startMathButton');
     const resetMathButton = document.getElementById('resetMathButton');
     const countdownDisplay = document.getElementById('countdownDisplay');
@@ -1349,7 +1399,7 @@
     function buildLogicBank(target = 100) {
       const bank = [];
       const seen = new Set();
-      const types = ['reverse', 'infoSelect', 'trick', 'sequence', 'oddOneOut', 'chain', 'multiSplit', 'basket'];
+      const types = ['reverse', 'infoSelect', 'trick', 'sequence', 'oddOneOut', 'chain', 'multiSplit'];
       let guard = 0;
 
       while (bank.length < target && guard < target * 60) {
@@ -1437,13 +1487,6 @@
           answer = Math.floor(total / 2);
           prompt = `มีลูกบอล ${total} ลูก แบ่งใส่กล่อง 2 ใบ โดยแต่ละกล่องต้องมีลูกบอลอย่างน้อย 1 ลูก แบ่งได้ทั้งหมดกี่แบบ (นับ 1+9 กับ 9+1 เป็นแบบเดียวกัน)?`;
           options = buildNumericOptions(answer, 4, 60);
-        } else {
-          const total = randomInt(10, 60);
-          const apples = randomInt(1, total - 1);
-          const removeOranges = randomInt(1, total - apples);
-          answer = total - removeOranges;
-          prompt = `ในตะกร้ามีแอปเปิลกับส้มรวมกัน ${total} ผล แอปเปิลมี ${apples} ผล ถ้าหยิบส้มออกไป ${removeOranges} ผล จะเหลือผลไม้ทั้งหมดกี่ผล?`;
-          options = buildNumericOptions(answer, 4, 200);
         }
 
         if (seen.has(prompt)) {
@@ -1451,10 +1494,50 @@
         }
         seen.add(prompt);
 
-        bank.push(createQuestion(prompt, answer, options, 'story', 15));
+        const question = createQuestion(prompt, answer, options, 'story', 15);
+        question.subType = type;
+        bank.push(question);
       }
 
       return bank;
+    }
+
+    function getHardBank() {
+      const mathState = appState.math;
+      return mathState.banks.hard.filter((question) => mathState.selectedLogicTypes.has(question.subType));
+    }
+
+    function renderLogicTypeChoices() {
+      const mathState = appState.math;
+      const isHard = mathState.selectedDifficulty === 'hard';
+      logicTypeLabel.classList.toggle('show', isHard);
+      logicTypeChoices.classList.toggle('show', isHard);
+      logicTypeChoices.innerHTML = '';
+
+      Object.entries(logicTypeLabels).forEach(([key, label]) => {
+        const option = document.createElement('label');
+        option.className = 'logic-type-option';
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = mathState.selectedLogicTypes.has(key);
+        checkbox.addEventListener('change', () => {
+          if (checkbox.checked) {
+            mathState.selectedLogicTypes.add(key);
+          } else if (mathState.selectedLogicTypes.size > 1) {
+            mathState.selectedLogicTypes.delete(key);
+          } else {
+            checkbox.checked = true;
+            return;
+          }
+          if (mathState.selectedDifficulty === 'hard') {
+            mathState.bank = getHardBank();
+            prepareMathRound();
+          }
+        });
+        option.appendChild(checkbox);
+        option.appendChild(document.createTextNode(label));
+        logicTypeChoices.appendChild(option);
+      });
     }
 
     function renderDifficultyChoices() {
@@ -1464,7 +1547,6 @@
       [
         { key: 'easy', label: difficultyLabels.easy },
         { key: 'medium', label: difficultyLabels.medium },
-        { key: 'fillBlank', label: difficultyLabels.fillBlank },
         { key: 'hard', label: difficultyLabels.hard }
       ].forEach((difficulty) => {
         const button = document.createElement('button');
@@ -1473,8 +1555,9 @@
         button.textContent = difficulty.label;
         button.addEventListener('click', () => {
           mathState.selectedDifficulty = difficulty.key;
-          mathState.bank = mathState.banks[difficulty.key];
+          mathState.bank = difficulty.key === 'hard' ? getHardBank() : mathState.banks[difficulty.key];
           renderDifficultyChoices();
+          renderLogicTypeChoices();
           prepareMathRound();
         });
         difficultyChoices.appendChild(button);
@@ -1635,7 +1718,7 @@
         const button = document.createElement('button');
         button.type = 'button';
         button.className = `time-choice${appState.math.baseTime === seconds ? ' active' : ''}`;
-        button.textContent = `${seconds} วินาที`;
+        button.textContent = seconds === 0 ? 'ไม่จับเวลา' : `${seconds} วินาที`;
         button.addEventListener('click', () => {
           appState.math.baseTime = seconds;
           renderTimeChoices();
@@ -1668,7 +1751,7 @@
 
     function renderMathIdleState() {
       mathQuestionCard.className = 'question-card';
-      mathQuestionCard.innerHTML = `<div class="math-empty">เลือกเวลา ${appState.math.baseTime} วินาทีต่อข้อ แล้วกดเริ่มเกม</div>`;
+      mathQuestionCard.innerHTML = `<div class="math-empty">${appState.math.baseTime === 0 ? 'เลือกแบบไม่จับเวลา' : `เลือกเวลา ${appState.math.baseTime} วินาทีต่อข้อ`} แล้วกดเริ่มเกม</div>`;
       mathOptions.innerHTML = '';
       mathResultBanner.className = 'result-banner';
       mathResultBanner.textContent = '';
@@ -1689,7 +1772,7 @@
       mathQuestionCard.className = 'question-card';
       mathQuestionCard.innerHTML = '<div class="math-empty">เตรียมตัวให้พร้อม</div>';
       mathOptions.innerHTML = '';
-      mathTimer.textContent = `เวลา: ${mathState.baseTime} วิ`;
+      mathTimer.textContent = mathState.baseTime === 0 ? 'เวลา: ไม่จับเวลา' : `เวลา: ${mathState.baseTime} วิ`;
 
       mathState.countdownId = window.setInterval(() => {
         count -= 1;
@@ -1732,10 +1815,14 @@
 
       mathState.currentIndex = index;
       mathState.isLocked = false;
-      mathState.timerLeft = mathState.baseTime + (question.extraTime || 0);
+      mathState.timerLeft = mathState.baseTime === 0 ? 0 : mathState.baseTime + (question.extraTime || 0);
       updateMathHeader();
       renderMathQuestion(question);
-      startMathTimer();
+      if (mathState.baseTime === 0) {
+        mathTimer.textContent = 'เวลา: ไม่จับเวลา';
+      } else {
+        startMathTimer();
+      }
     }
 
     function renderMathQuestion(question) {
@@ -1861,10 +1948,13 @@
     resetMathButton.addEventListener('click', prepareMathRound);
 
     appState.math.banks = buildMathBanks();
-    appState.math.banks.fillBlank = buildAddSubBank(300).concat(buildChainAddSubBank(100)).map((question) => ({ ...question, type: 'equation', extraTime: 0 }));
+    appState.math.banks.medium = appState.math.banks.medium.concat(
+      buildAddSubBank(300).concat(buildChainAddSubBank(100)).map((question) => ({ ...question, type: 'equation', extraTime: 0 }))
+    );
     appState.math.banks.hard = buildLogicBank(100);
     appState.math.bank = appState.math.banks[appState.math.selectedDifficulty];
     renderDifficultyChoices();
+    renderLogicTypeChoices();
     renderTimeChoices();
     prepareMathRound();
     switchScreen('home');
