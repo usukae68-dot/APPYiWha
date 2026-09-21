@@ -802,26 +802,13 @@
         <article class="game-card">
           <div class="game-icon">➕</div>
           <h3>เกมบวกเลข ป.1</h3>
-          <p>โจทย์บวกเลขและโจทย์คำภาษาไทยสำหรับเด็ก ป.1 สุ่มเล่นครั้งละ 10 ข้อ เลือกเวลาต่อข้อได้ก่อนเริ่มเกม</p>
+          <p>รวมโจทย์บวกลบ โจทย์เติมคำตอบ และโจทย์คิดวิเคราะห์สำหรับเด็ก ป.1 ไว้ในเกมเดียว สุ่มเล่นครั้งละ 10 ข้อ เลือกระดับและเวลาต่อข้อได้ก่อนเริ่มเกม</p>
           <div class="chip-row">
-            <div class="pill">คลังโจทย์ 200 ข้อ</div>
-            <div class="pill">ตอบ 4 ตัวเลือก</div>
+            <div class="pill">คลังโจทย์ 700 ข้อ</div>
+            <div class="pill">4 ระดับให้เลือก</div>
           </div>
           <div class="pill-row">
             <button id="openMathGame" type="button">เริ่มเกมบวกเลข</button>
-          </div>
-        </article>
-
-        <article class="game-card">
-          <div class="game-icon">🧮</div>
-          <h3>เกมบวกลบเลข ป.1 (เติมคำตอบ)</h3>
-          <p>โจทย์บวกลบแบบเติมช่องว่าง ตัวเลขไม่เกิน 500 สลับตำแหน่งช่องว่างหลากหลายรูปแบบ สุ่มเล่นครั้งละ 10 ข้อ เลือกได้ว่าจะจับเวลาหรือไม่</p>
-          <div class="chip-row">
-            <div class="pill">คลังโจทย์ 400 ข้อ</div>
-            <div class="pill">ตอบ 3 ตัวเลือก</div>
-          </div>
-          <div class="pill-row">
-            <button id="openAddSubGame" type="button">เริ่มเกมบวกลบ</button>
           </div>
         </article>
       </div>
@@ -874,7 +861,7 @@
     <section class="screen" id="mathScreen">
       <div class="hero">
         <h2>เกมบวกเลข ป.1</h2>
-        <p>เลือกเวลาต่อข้อก่อนเริ่ม และตอบคำถามทีละข้อแบบ 4 ตัวเลือก</p>
+        <p>เลือกระดับและเวลาต่อข้อก่อนเริ่ม แล้วตอบคำถามทีละข้อ</p>
       </div>
 
       <section class="setup-grid">
@@ -907,43 +894,6 @@
           </div>
           <div class="answer-grid" id="mathOptions"></div>
           <section class="result-banner" id="mathResultBanner"></section>
-        </section>
-      </section>
-    </section>
-
-    <section class="screen" id="addSubScreen">
-      <div class="hero">
-        <h2>เกมบวกลบเลข ป.1 (เติมคำตอบ)</h2>
-        <p>โจทย์เติมช่องว่างบวก-ลบ ตัวเลขไม่เกิน 500 เลือกก่อนว่าจะจับเวลาไหมแล้วตอบทีละข้อแบบ 3 ตัวเลือก</p>
-      </div>
-
-      <section class="setup-grid">
-        <aside class="setup-card">
-          <h3>ตั้งค่าเกม</h3>
-          <p class="subcopy">เลือกว่าจะจับเวลาทั้งรอบ (10 ข้อ) หรือไม่จับเวลา</p>
-          <div class="setup-options" id="addSubTimeChoices"></div>
-          <div class="status-strip">
-            <div class="pill" id="addSubQuestionPool">คลังโจทย์ 400 ข้อ</div>
-            <div class="pill">เล่นรอบละ 10 ข้อ</div>
-          </div>
-          <div class="pill-row" style="margin-top: 14px;">
-            <button id="startAddSubButton" type="button">เริ่มเกมบวกลบ</button>
-            <button class="secondary" id="resetAddSubButton" type="button">สุ่มโจทย์ใหม่</button>
-          </div>
-          <div class="countdown" id="addSubCountdown">3</div>
-        </aside>
-
-        <section class="math-stage">
-          <div class="math-toolbar">
-            <div class="timer-card" id="addSubTimer">เวลา: -</div>
-            <div class="answer-pill" id="addSubProgress">ข้อที่ 0 / 10</div>
-            <div class="answer-pill" id="addSubScore">คะแนน: 0</div>
-          </div>
-          <div class="question-card" id="addSubQuestionCard">
-            <div class="math-empty">กดเริ่มเกมเพื่อสุ่มคำถามและนับถอยหลัง 3 2 1</div>
-          </div>
-          <div class="answer-grid" id="addSubOptions"></div>
-          <section class="result-banner" id="addSubResultBanner"></section>
         </section>
       </section>
     </section>
@@ -981,7 +931,7 @@
     const linePalette = ['#3a86ff', '#ff7b54', '#43aa8b', '#ffb703', '#9b5de5', '#ef476f', '#06d6a0', '#118ab2', '#fb8500', '#6a994e'];
     const thaiChoices = ['ก', 'ข', 'ค', 'ง'];
     const mathBaseTimes = [5, 10, 15, 30];
-    const addSubTimeOptions = [0, 180, 300, 480];
+    const difficultyLabels = { easy: 'ง่าย', medium: 'กลาง', fillBlank: 'เติมคำตอบ', hard: 'คิดวิเคราะห์' };
 
     const appState = {
       activeScreen: 'home',
@@ -997,20 +947,10 @@
         selectedDifficulty: 'easy',
         banks: {
           easy: [],
-          medium: []
+          medium: [],
+          fillBlank: [],
+          hard: []
         },
-        bank: [],
-        round: [],
-        currentIndex: -1,
-        score: 0,
-        timerLeft: 0,
-        timerId: null,
-        countdownId: null,
-        isLocked: true,
-        isCountingDown: false
-      },
-      addSub: {
-        totalTime: 0,
         bank: [],
         round: [],
         currentIndex: -1,
@@ -1026,14 +966,12 @@
     const screens = {
       home: document.getElementById('homeScreen'),
       flags: document.getElementById('flagsScreen'),
-      math: document.getElementById('mathScreen'),
-      addSub: document.getElementById('addSubScreen')
+      math: document.getElementById('mathScreen')
     };
 
     const homeButton = document.getElementById('homeButton');
     const openFlagsGame = document.getElementById('openFlagsGame');
     const openMathGame = document.getElementById('openMathGame');
-    const openAddSubGame = document.getElementById('openAddSubGame');
     const board = document.getElementById('board');
     const sourceList = document.getElementById('sourceList');
     const targetList = document.getElementById('targetList');
@@ -1060,17 +998,6 @@
     const mathOptions = document.getElementById('mathOptions');
     const mathResultBanner = document.getElementById('mathResultBanner');
     const mathQuestionPool = document.getElementById('mathQuestionPool');
-    const addSubTimeChoices = document.getElementById('addSubTimeChoices');
-    const startAddSubButton = document.getElementById('startAddSubButton');
-    const resetAddSubButton = document.getElementById('resetAddSubButton');
-    const addSubCountdown = document.getElementById('addSubCountdown');
-    const addSubTimer = document.getElementById('addSubTimer');
-    const addSubProgress = document.getElementById('addSubProgress');
-    const addSubScore = document.getElementById('addSubScore');
-    const addSubQuestionCard = document.getElementById('addSubQuestionCard');
-    const addSubOptions = document.getElementById('addSubOptions');
-    const addSubResultBanner = document.getElementById('addSubResultBanner');
-    const addSubQuestionPool = document.getElementById('addSubQuestionPool');
 
     function shuffle(items) {
       const cloned = [...items];
@@ -1403,214 +1330,131 @@
       return bank;
     }
 
-    function renderAddSubTimeChoices() {
-      const addSubState = appState.addSub;
-      addSubTimeChoices.innerHTML = '';
-      addSubTimeOptions.forEach((seconds) => {
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.className = `time-choice${addSubState.totalTime === seconds ? ' active' : ''}`;
-        button.textContent = seconds === 0 ? 'ไม่จับเวลา' : `จับเวลา ${Math.round(seconds / 60)} นาที`;
-        button.addEventListener('click', () => {
-          addSubState.totalTime = seconds;
-          renderAddSubTimeChoices();
-        });
-        addSubTimeChoices.appendChild(button);
-      });
-    }
-
-    function prepareAddSubRound() {
-      stopAddSubTimers();
-      const addSubState = appState.addSub;
-      addSubState.round = shuffle(addSubState.bank).slice(0, 10).map((question) => ({
-        ...question,
-        options: shuffle(question.options).map((option, index) => ({ label: thaiChoices[index], value: option.value }))
-      }));
-      addSubState.currentIndex = -1;
-      addSubState.score = 0;
-      addSubState.timerLeft = 0;
-      addSubState.isLocked = true;
-      addSubState.isCountingDown = false;
-      addSubQuestionPool.textContent = `คลังโจทย์ ${addSubState.bank.length} ข้อ`;
-      updateAddSubHeader();
-      renderAddSubIdleState();
-    }
-
-    function renderAddSubIdleState() {
-      addSubQuestionCard.className = 'question-card';
-      addSubQuestionCard.innerHTML = `<div class="math-empty">${appState.addSub.totalTime > 0 ? `เลือกจับเวลารวม ${Math.round(appState.addSub.totalTime / 60)} นาทีสำหรับ 10 ข้อ` : 'เลือกไม่จับเวลา'} แล้วกดเริ่มเกม</div>`;
-      addSubOptions.innerHTML = '';
-      addSubResultBanner.className = 'result-banner';
-      addSubResultBanner.textContent = '';
-      addSubTimer.textContent = 'เวลา: -';
-    }
-
-    function startAddSubGame() {
-      const addSubState = appState.addSub;
-      stopAddSubTimers();
-      addSubState.score = 0;
-      addSubState.currentIndex = -1;
-      addSubState.isLocked = true;
-      addSubState.isCountingDown = true;
-      updateAddSubHeader();
-      let count = 3;
-      addSubCountdown.textContent = count;
-      addSubCountdown.classList.add('show');
-      addSubQuestionCard.className = 'question-card';
-      addSubQuestionCard.innerHTML = '<div class="math-empty">เตรียมตัวให้พร้อม</div>';
-      addSubOptions.innerHTML = '';
-      addSubTimer.textContent = addSubState.totalTime > 0 ? formatAddSubTime(addSubState.totalTime) : 'เวลา: ไม่จับเวลา';
-
-      addSubState.countdownId = window.setInterval(() => {
-        count -= 1;
-        if (count > 0) {
-          addSubCountdown.textContent = count;
-          return;
+    function buildNumericOptions(answer, count, maxValue) {
+      const options = new Set([answer]);
+      const offsets = [1, 2, 3, 4, 5, 6, 8, 10, 12, 15, 20];
+      let guard = 0;
+      while (options.size < count && guard < 100) {
+        guard += 1;
+        const sign = Math.random() < 0.5 ? -1 : 1;
+        const offset = offsets[randomInt(0, offsets.length - 1)] * sign;
+        const candidate = answer + offset;
+        if (candidate >= 0 && candidate <= maxValue) {
+          options.add(candidate);
         }
-        if (count === 0) {
-          addSubCountdown.textContent = 'เริ่ม';
-          return;
+      }
+      return shuffle([...options]);
+    }
+
+    function buildLogicBank(target = 100) {
+      const bank = [];
+      const seen = new Set();
+      const types = ['reverse', 'infoSelect', 'trick', 'sequence', 'oddOneOut', 'chain', 'multiSplit', 'basket'];
+      let guard = 0;
+
+      while (bank.length < target && guard < target * 60) {
+        guard += 1;
+        const type = types[randomInt(0, types.length - 1)];
+        let prompt = '';
+        let answer = 0;
+        let options = [];
+
+        if (type === 'reverse') {
+          const scenarios = [
+            { subject: 'แม่', item: 'ลูกอม', unit: 'เม็ด', receiver: 'ยิหวา', verb: 'แจกให้' },
+            { subject: 'พ่อ', item: 'ดินสอ', unit: 'แท่ง', receiver: 'น้อง', verb: 'แบ่งให้' },
+            { subject: 'ครู', item: 'สมุด', unit: 'เล่ม', receiver: 'นักเรียน', verb: 'แจกให้' },
+            { subject: 'ป้า', item: 'ขนม', unit: 'ชิ้น', receiver: 'หลาน', verb: 'ให้' }
+          ];
+          const scenario = scenarios[randomInt(0, scenarios.length - 1)];
+          const given = randomInt(2, 30);
+          const remain = randomInt(2, 60);
+          answer = given + remain;
+          prompt = `${scenario.subject}มี${scenario.item}อยู่จำนวนหนึ่ง ${scenario.verb}${scenario.receiver}ไป ${given} ${scenario.unit} เหลือ ${remain} ${scenario.unit} เดิม${scenario.subject}มี${scenario.item}กี่${scenario.unit}?`;
+          options = buildNumericOptions(answer, 4, 200);
+        } else if (type === 'infoSelect') {
+          const scenarios = [
+            { container: 'กล่อง', item: 'ดินสอ', unit: 'แท่ง', colorA: 'สีแดง', colorB: 'สีฟ้า' },
+            { container: 'ถุง', item: 'ลูกอม', unit: 'เม็ด', colorA: 'รสส้ม', colorB: 'รสองุ่น' },
+            { container: 'ตะกร้า', item: 'ดอกไม้', unit: 'ดอก', colorA: 'สีเหลือง', colorB: 'สีชมพู' }
+          ];
+          const scenario = scenarios[randomInt(0, scenarios.length - 1)];
+          const total = randomInt(10, 60);
+          const part = randomInt(1, total - 1);
+          answer = total - part;
+          prompt = `ใน${scenario.container}มี${scenario.item} ${total} ${scenario.unit} เป็น${scenario.colorA} ${part} ${scenario.unit} ที่เหลือเป็น${scenario.colorB} ${scenario.colorB}มีกี่${scenario.unit}?`;
+          options = buildNumericOptions(answer, 4, 200);
+        } else if (type === 'trick') {
+          const scenarios = [
+            { item: 'สติกเกอร์', unit: 'ดวง' },
+            { item: 'ลูกอม', unit: 'เม็ด' },
+            { item: 'ดินสอสี', unit: 'แท่ง' }
+          ];
+          const scenario = scenarios[randomInt(0, scenarios.length - 1)];
+          const start = randomInt(10, 40);
+          const give = randomInt(1, start - 1);
+          const receiveBack = randomInt(1, 10);
+          answer = start - give + receiveBack;
+          prompt = `น้องมี${scenario.item} ${start} ${scenario.unit} แบ่งให้เพื่อนไป ${give} ${scenario.unit} แล้วเพื่อนนำ${scenario.item}มาคืนให้ ${receiveBack} ${scenario.unit} ตอนนี้น้องมี${scenario.item}กี่${scenario.unit}?`;
+          options = buildNumericOptions(answer, 4, 200);
+        } else if (type === 'sequence') {
+          const start = randomInt(1, 20);
+          const step = randomInt(2, 6);
+          const terms = [start, start + step, start + 2 * step, start + 3 * step];
+          answer = start + 4 * step;
+          prompt = `${terms.join(', ')}, ____ ตัวเลขต่อไปคือเลขอะไร?`;
+          options = buildNumericOptions(answer, 4, 200);
+        } else if (type === 'oddOneOut') {
+          const divisor = [2, 3, 5][randomInt(0, 2)];
+          const multiples = new Set();
+          while (multiples.size < 3) {
+            multiples.add(divisor * randomInt(2, 20));
+          }
+          let odd = randomInt(2, 60);
+          while (odd % divisor === 0) {
+            odd = randomInt(2, 60);
+          }
+          answer = odd;
+          const numberList = shuffle([odd, ...multiples]);
+          prompt = `${numberList.join(', ')} ตัวเลขใดไม่เข้าพวก?`;
+          options = shuffle([odd, ...multiples]);
+        } else if (type === 'chain') {
+          const scenarios = [
+            { a: 'แม่', b: 'พ่อ', c: 'ยิหวา', item: 'ลูกโป่ง', unit: 'ลูก' },
+            { a: 'พี่', b: 'น้อง', c: 'แม่', item: 'สมุด', unit: 'เล่ม' },
+            { a: 'ครู', b: 'นักเรียน', c: 'ภารโรง', item: 'ดินสอ', unit: 'แท่ง' }
+          ];
+          const scenario = scenarios[randomInt(0, scenarios.length - 1)];
+          const base = randomInt(5, 30);
+          const diff1 = randomInt(2, 10);
+          const diff2 = randomInt(1, 8);
+          const middle = base + diff1;
+          answer = middle - diff2;
+          prompt = `${scenario.a}มี${scenario.item} ${base} ${scenario.unit} ${scenario.b}มี${scenario.item}มากกว่า${scenario.a} ${diff1} ${scenario.unit} ${scenario.c}มี${scenario.item}น้อยกว่า${scenario.b} ${diff2} ${scenario.unit} ${scenario.c}มี${scenario.item}กี่${scenario.unit}?`;
+          options = buildNumericOptions(answer, 4, 200);
+        } else if (type === 'multiSplit') {
+          const total = randomInt(4, 60);
+          answer = Math.floor(total / 2);
+          prompt = `มีลูกบอล ${total} ลูก แบ่งใส่กล่อง 2 ใบ โดยแต่ละกล่องต้องมีลูกบอลอย่างน้อย 1 ลูก แบ่งได้ทั้งหมดกี่แบบ (นับ 1+9 กับ 9+1 เป็นแบบเดียวกัน)?`;
+          options = buildNumericOptions(answer, 4, 60);
+        } else {
+          const total = randomInt(10, 60);
+          const apples = randomInt(1, total - 1);
+          const removeOranges = randomInt(1, total - apples);
+          answer = total - removeOranges;
+          prompt = `ในตะกร้ามีแอปเปิลกับส้มรวมกัน ${total} ผล แอปเปิลมี ${apples} ผล ถ้าหยิบส้มออกไป ${removeOranges} ผล จะเหลือผลไม้ทั้งหมดกี่ผล?`;
+          options = buildNumericOptions(answer, 4, 200);
         }
-        window.clearInterval(addSubState.countdownId);
-        addSubState.countdownId = null;
-        addSubState.isCountingDown = false;
-        addSubCountdown.classList.remove('show');
-        if (addSubState.totalTime > 0) {
-          addSubState.timerLeft = addSubState.totalTime;
-          startAddSubOverallTimer();
+
+        if (seen.has(prompt)) {
+          continue;
         }
-        showAddSubQuestion(0);
-      }, 700);
-    }
+        seen.add(prompt);
 
-    function formatAddSubTime(seconds) {
-      const safeSeconds = Math.max(seconds, 0);
-      const minutes = Math.floor(safeSeconds / 60);
-      const remain = safeSeconds % 60;
-      return `เวลา: ${minutes}:${String(remain).padStart(2, '0')}`;
-    }
-
-    function startAddSubOverallTimer() {
-      const addSubState = appState.addSub;
-      if (addSubState.timerId) {
-        window.clearInterval(addSubState.timerId);
-      }
-      addSubTimer.textContent = formatAddSubTime(addSubState.timerLeft);
-      addSubState.timerId = window.setInterval(() => {
-        addSubState.timerLeft -= 1;
-        addSubTimer.textContent = formatAddSubTime(addSubState.timerLeft);
-        if (addSubState.timerLeft > 0) {
-          return;
-        }
-        window.clearInterval(addSubState.timerId);
-        addSubState.timerId = null;
-        finishAddSubRound(true);
-      }, 1000);
-    }
-
-    function stopAddSubTimers() {
-      const addSubState = appState.addSub;
-      if (addSubState.timerId) {
-        window.clearInterval(addSubState.timerId);
-        addSubState.timerId = null;
-      }
-      if (addSubState.countdownId) {
-        window.clearInterval(addSubState.countdownId);
-        addSubState.countdownId = null;
-      }
-      addSubCountdown.classList.remove('show');
-    }
-
-    function showAddSubQuestion(index) {
-      const addSubState = appState.addSub;
-      const question = addSubState.round[index];
-      if (!question) {
-        finishAddSubRound(false);
-        return;
+        bank.push(createQuestion(prompt, answer, options, 'story', 15));
       }
 
-      addSubState.currentIndex = index;
-      addSubState.isLocked = false;
-      updateAddSubHeader();
-      renderAddSubQuestion(question);
-    }
-
-    function renderAddSubQuestion(question) {
-      addSubQuestionCard.className = 'question-card';
-      addSubQuestionCard.innerHTML = `
-        <div class="question-meta">โจทย์บวกลบ</div>
-        <p class="math-question-text">${question.prompt}</p>
-      `;
-      addSubOptions.innerHTML = '';
-      question.options.forEach((option) => {
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'option-button';
-        button.dataset.value = String(option.value);
-        button.innerHTML = `<span class="option-label">${option.label}</span>${option.value}`;
-        button.addEventListener('click', () => handleAddSubAnswer(option.value, button));
-        addSubOptions.appendChild(button);
-      });
-    }
-
-    function handleAddSubAnswer(selectedValue, buttonElement) {
-      const addSubState = appState.addSub;
-      if (addSubState.isLocked) {
-        return;
-      }
-      const question = addSubState.round[addSubState.currentIndex];
-      const isCorrect = Number(selectedValue) === Number(question.answer);
-      if (buttonElement) {
-        buttonElement.classList.add(isCorrect ? 'correct' : 'wrong');
-      }
-      lockAddSubQuestion(isCorrect);
-    }
-
-    function lockAddSubQuestion(isCorrect) {
-      const addSubState = appState.addSub;
-      const question = addSubState.round[addSubState.currentIndex];
-      if (addSubState.isLocked || !question) {
-        return;
-      }
-      addSubState.isLocked = true;
-      if (isCorrect) {
-        addSubState.score += 1;
-      }
-      Array.from(addSubOptions.querySelectorAll('button')).forEach((button) => {
-        button.disabled = true;
-        const buttonValue = Number(button.dataset.value);
-        if (buttonValue === Number(question.answer)) {
-          button.classList.add('correct');
-        }
-      });
-      addSubResultBanner.textContent = isCorrect ? `ถูกต้อง คำตอบคือ ${question.answer}` : `ยังไม่ถูก ข้อนี้คำตอบคือ ${question.answer}`;
-      addSubResultBanner.className = 'result-banner show';
-      updateAddSubHeader();
-      window.setTimeout(() => showAddSubQuestion(addSubState.currentIndex + 1), 1100);
-    }
-
-    function updateAddSubHeader() {
-      const addSubState = appState.addSub;
-      const currentDisplay = addSubState.currentIndex >= 0 ? Math.min(addSubState.currentIndex + 1, 10) : 0;
-      addSubProgress.textContent = `ข้อที่ ${currentDisplay} / 10`;
-      addSubScore.textContent = `คะแนน: ${addSubState.score}`;
-    }
-
-    function finishAddSubRound(fromTimeout) {
-      stopAddSubTimers();
-      const addSubState = appState.addSub;
-      addSubState.currentIndex = addSubState.round.length;
-      addSubState.isLocked = true;
-      updateAddSubHeader();
-      addSubTimer.textContent = fromTimeout ? 'เวลา: หมดเวลา' : 'เวลา: จบรอบ';
-      addSubQuestionCard.className = 'question-card';
-      addSubQuestionCard.innerHTML = `
-        <div class="question-meta">สรุปผล</div>
-        <p class="math-question-text">ตอบถูก ${addSubState.score} จาก ${addSubState.round.length} ข้อ</p>
-      `;
-      addSubOptions.innerHTML = '';
-      addSubResultBanner.textContent = addSubState.score === addSubState.round.length ? 'ยอดเยี่ยม ตอบถูกครบทุกข้อ' : 'กดเริ่มเกมเพื่อเล่นรอบใหม่ได้เลย';
-      addSubResultBanner.className = 'result-banner show';
+      return bank;
     }
 
     function renderDifficultyChoices() {
@@ -1618,8 +1462,10 @@
       difficultyChoices.innerHTML = '';
 
       [
-        { key: 'easy', label: 'ง่าย' },
-        { key: 'medium', label: 'กลาง' }
+        { key: 'easy', label: difficultyLabels.easy },
+        { key: 'medium', label: difficultyLabels.medium },
+        { key: 'fillBlank', label: difficultyLabels.fillBlank },
+        { key: 'hard', label: difficultyLabels.hard }
       ].forEach((difficulty) => {
         const button = document.createElement('button');
         button.type = 'button';
@@ -1649,11 +1495,6 @@
       if (screenName === 'math') {
         stopMathTimers();
         prepareMathRound();
-      }
-
-      if (screenName === 'addSub') {
-        stopAddSubTimers();
-        prepareAddSubRound();
       }
     }
 
@@ -1984,7 +1825,7 @@
       const currentDisplay = mathState.currentIndex >= 0 ? Math.min(mathState.currentIndex + 1, 10) : 0;
       mathProgress.textContent = `ข้อที่ ${currentDisplay} / 10`;
       mathScore.textContent = `คะแนน: ${mathState.score}`;
-      mathQuestionPool.textContent = `ระดับ${mathState.selectedDifficulty === 'easy' ? 'ง่าย' : 'กลาง'} ${mathState.bank.length} ข้อ`;
+      mathQuestionPool.textContent = `ระดับ${difficultyLabels[mathState.selectedDifficulty]} ${mathState.bank.length} ข้อ`;
     }
 
     function finishMathRound() {
@@ -2006,12 +1847,10 @@
 
     homeButton.addEventListener('click', () => {
       stopMathTimers();
-      stopAddSubTimers();
       switchScreen('home');
     });
     openFlagsGame.addEventListener('click', () => switchScreen('flags'));
     openMathGame.addEventListener('click', () => switchScreen('math'));
-    openAddSubGame.addEventListener('click', () => switchScreen('addSub'));
     chooseAseanButton.addEventListener('click', () => setFlagGroup('asean'));
     chooseWorldButton.addEventListener('click', () => setFlagGroup('world'));
     resetFlagsButton.addEventListener('click', startFlagRound);
@@ -2020,20 +1859,14 @@
       startMathGame();
     });
     resetMathButton.addEventListener('click', prepareMathRound);
-    startAddSubButton.addEventListener('click', () => {
-      prepareAddSubRound();
-      startAddSubGame();
-    });
-    resetAddSubButton.addEventListener('click', prepareAddSubRound);
 
     appState.math.banks = buildMathBanks();
+    appState.math.banks.fillBlank = buildAddSubBank(300).concat(buildChainAddSubBank(100)).map((question) => ({ ...question, type: 'equation', extraTime: 0 }));
+    appState.math.banks.hard = buildLogicBank(100);
     appState.math.bank = appState.math.banks[appState.math.selectedDifficulty];
     renderDifficultyChoices();
     renderTimeChoices();
     prepareMathRound();
-    appState.addSub.bank = buildAddSubBank(300).concat(buildChainAddSubBank(100));
-    renderAddSubTimeChoices();
-    prepareAddSubRound();
     switchScreen('home');
   </script>
 </body>
