@@ -801,6 +801,19 @@
             <button id="openMathGame" type="button">เริ่มเกมบวกเลข</button>
           </div>
         </article>
+
+        <article class="game-card">
+          <div class="game-icon">🧮</div>
+          <h3>เกมบวกลบเลข ป.1 (เติมคำตอบ)</h3>
+          <p>โจทย์บวกลบแบบเติมช่องว่าง ตัวเลขไม่เกิน 500 สลับตำแหน่งช่องว่างหลากหลายรูปแบบ สุ่มเล่นครั้งละ 10 ข้อ เลือกได้ว่าจะจับเวลาหรือไม่</p>
+          <div class="chip-row">
+            <div class="pill">คลังโจทย์ 300 ข้อ</div>
+            <div class="pill">ตอบ 3 ตัวเลือก</div>
+          </div>
+          <div class="pill-row">
+            <button id="openAddSubGame" type="button">เริ่มเกมบวกลบ</button>
+          </div>
+        </article>
       </div>
     </section>
 
@@ -887,6 +900,43 @@
         </section>
       </section>
     </section>
+
+    <section class="screen" id="addSubScreen">
+      <div class="hero">
+        <h2>เกมบวกลบเลข ป.1 (เติมคำตอบ)</h2>
+        <p>โจทย์เติมช่องว่างบวก-ลบ ตัวเลขไม่เกิน 500 เลือกก่อนว่าจะจับเวลาไหมแล้วตอบทีละข้อแบบ 3 ตัวเลือก</p>
+      </div>
+
+      <section class="setup-grid">
+        <aside class="setup-card">
+          <h3>ตั้งค่าเกม</h3>
+          <p class="subcopy">เลือกว่าจะจับเวลาทั้งรอบ (10 ข้อ) หรือไม่จับเวลา</p>
+          <div class="setup-options" id="addSubTimeChoices"></div>
+          <div class="status-strip">
+            <div class="pill" id="addSubQuestionPool">คลังโจทย์ 300 ข้อ</div>
+            <div class="pill">เล่นรอบละ 10 ข้อ</div>
+          </div>
+          <div class="pill-row" style="margin-top: 14px;">
+            <button id="startAddSubButton" type="button">เริ่มเกมบวกลบ</button>
+            <button class="secondary" id="resetAddSubButton" type="button">สุ่มโจทย์ใหม่</button>
+          </div>
+          <div class="countdown" id="addSubCountdown">3</div>
+        </aside>
+
+        <section class="math-stage">
+          <div class="math-toolbar">
+            <div class="timer-card" id="addSubTimer">เวลา: -</div>
+            <div class="answer-pill" id="addSubProgress">ข้อที่ 0 / 10</div>
+            <div class="answer-pill" id="addSubScore">คะแนน: 0</div>
+          </div>
+          <div class="question-card" id="addSubQuestionCard">
+            <div class="math-empty">กดเริ่มเกมเพื่อสุ่มคำถามและนับถอยหลัง 3 2 1</div>
+          </div>
+          <div class="answer-grid" id="addSubOptions"></div>
+          <section class="result-banner" id="addSubResultBanner"></section>
+        </section>
+      </section>
+    </section>
   </main>
 
   <script>
@@ -921,6 +971,7 @@
     const linePalette = ['#3a86ff', '#ff7b54', '#43aa8b', '#ffb703', '#9b5de5', '#ef476f', '#06d6a0', '#118ab2', '#fb8500', '#6a994e'];
     const thaiChoices = ['ก', 'ข', 'ค', 'ง'];
     const mathBaseTimes = [5, 10, 15, 30];
+    const addSubTimeOptions = [0, 180, 300, 480];
 
     const appState = {
       activeScreen: 'home',
@@ -947,18 +998,32 @@
         countdownId: null,
         isLocked: true,
         isCountingDown: false
+      },
+      addSub: {
+        totalTime: 0,
+        bank: [],
+        round: [],
+        currentIndex: -1,
+        score: 0,
+        timerLeft: 0,
+        timerId: null,
+        countdownId: null,
+        isLocked: true,
+        isCountingDown: false
       }
     };
 
     const screens = {
       home: document.getElementById('homeScreen'),
       flags: document.getElementById('flagsScreen'),
-      math: document.getElementById('mathScreen')
+      math: document.getElementById('mathScreen'),
+      addSub: document.getElementById('addSubScreen')
     };
 
     const homeButton = document.getElementById('homeButton');
     const openFlagsGame = document.getElementById('openFlagsGame');
     const openMathGame = document.getElementById('openMathGame');
+    const openAddSubGame = document.getElementById('openAddSubGame');
     const board = document.getElementById('board');
     const sourceList = document.getElementById('sourceList');
     const targetList = document.getElementById('targetList');
@@ -985,6 +1050,17 @@
     const mathOptions = document.getElementById('mathOptions');
     const mathResultBanner = document.getElementById('mathResultBanner');
     const mathQuestionPool = document.getElementById('mathQuestionPool');
+    const addSubTimeChoices = document.getElementById('addSubTimeChoices');
+    const startAddSubButton = document.getElementById('startAddSubButton');
+    const resetAddSubButton = document.getElementById('resetAddSubButton');
+    const addSubCountdown = document.getElementById('addSubCountdown');
+    const addSubTimer = document.getElementById('addSubTimer');
+    const addSubProgress = document.getElementById('addSubProgress');
+    const addSubScore = document.getElementById('addSubScore');
+    const addSubQuestionCard = document.getElementById('addSubQuestionCard');
+    const addSubOptions = document.getElementById('addSubOptions');
+    const addSubResultBanner = document.getElementById('addSubResultBanner');
+    const addSubQuestionPool = document.getElementById('addSubQuestionPool');
 
     function shuffle(items) {
       const cloned = [...items];
@@ -1190,6 +1266,292 @@
       };
     }
 
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function buildAddSubDistractors(answer) {
+      const options = new Set([answer]);
+      const offsets = [1, 2, 3, 5, 10, 15, 20];
+      let guard = 0;
+      while (options.size < 3 && guard < 60) {
+        guard += 1;
+        const sign = Math.random() < 0.5 ? -1 : 1;
+        const offset = offsets[randomInt(0, offsets.length - 1)] * sign;
+        const candidate = answer + offset;
+        if (candidate >= 0 && candidate <= 999) {
+          options.add(candidate);
+        }
+      }
+      return shuffle([...options]);
+    }
+
+    function buildAddSubBank(target = 300) {
+      const bank = [];
+      const seen = new Set();
+      const types = ['sumUnknown', 'addFirstUnknown', 'addSecondUnknown', 'diffUnknown', 'minuendUnknown', 'subtrahendUnknown'];
+      let guard = 0;
+
+      while (bank.length < target && guard < target * 60) {
+        guard += 1;
+        const type = types[randomInt(0, types.length - 1)];
+        let prompt = '';
+        let answer = 0;
+
+        if (type === 'sumUnknown') {
+          const a = randomInt(1, 490);
+          const b = randomInt(1, 500 - a);
+          answer = a + b;
+          prompt = `${a} + ${b} = ____`;
+        } else if (type === 'addFirstUnknown') {
+          const b = randomInt(1, 490);
+          const c = randomInt(b + 1, 500);
+          answer = c - b;
+          prompt = `____ + ${b} = ${c}`;
+        } else if (type === 'addSecondUnknown') {
+          const a = randomInt(1, 490);
+          const c = randomInt(a + 1, 500);
+          answer = c - a;
+          prompt = `${a} + ____ = ${c}`;
+        } else if (type === 'diffUnknown') {
+          const a = randomInt(1, 500);
+          const b = randomInt(0, a);
+          answer = a - b;
+          prompt = `${a} - ${b} = ____`;
+        } else if (type === 'minuendUnknown') {
+          const b = randomInt(1, 500);
+          const c = randomInt(0, 500 - b);
+          answer = b + c;
+          prompt = `____ - ${b} = ${c}`;
+        } else {
+          const a = randomInt(1, 500);
+          const c = randomInt(0, a);
+          answer = a - c;
+          prompt = `${a} - ____ = ${c}`;
+        }
+
+        if (seen.has(prompt)) {
+          continue;
+        }
+        seen.add(prompt);
+
+        const options = buildAddSubDistractors(answer).map((value, index) => ({ label: thaiChoices[index], value }));
+        bank.push({ prompt, answer, options });
+      }
+
+      return bank;
+    }
+
+    function renderAddSubTimeChoices() {
+      const addSubState = appState.addSub;
+      addSubTimeChoices.innerHTML = '';
+      addSubTimeOptions.forEach((seconds) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = `time-choice${addSubState.totalTime === seconds ? ' active' : ''}`;
+        button.textContent = seconds === 0 ? 'ไม่จับเวลา' : `จับเวลา ${Math.round(seconds / 60)} นาที`;
+        button.addEventListener('click', () => {
+          addSubState.totalTime = seconds;
+          renderAddSubTimeChoices();
+        });
+        addSubTimeChoices.appendChild(button);
+      });
+    }
+
+    function prepareAddSubRound() {
+      stopAddSubTimers();
+      const addSubState = appState.addSub;
+      addSubState.round = shuffle(addSubState.bank).slice(0, 10).map((question) => ({
+        ...question,
+        options: shuffle(question.options).map((option, index) => ({ label: thaiChoices[index], value: option.value }))
+      }));
+      addSubState.currentIndex = -1;
+      addSubState.score = 0;
+      addSubState.timerLeft = 0;
+      addSubState.isLocked = true;
+      addSubState.isCountingDown = false;
+      addSubQuestionPool.textContent = `คลังโจทย์ ${addSubState.bank.length} ข้อ`;
+      updateAddSubHeader();
+      renderAddSubIdleState();
+    }
+
+    function renderAddSubIdleState() {
+      addSubQuestionCard.className = 'question-card';
+      addSubQuestionCard.innerHTML = `<div class="math-empty">${appState.addSub.totalTime > 0 ? `เลือกจับเวลารวม ${Math.round(appState.addSub.totalTime / 60)} นาทีสำหรับ 10 ข้อ` : 'เลือกไม่จับเวลา'} แล้วกดเริ่มเกม</div>`;
+      addSubOptions.innerHTML = '';
+      addSubResultBanner.className = 'result-banner';
+      addSubResultBanner.textContent = '';
+      addSubTimer.textContent = 'เวลา: -';
+    }
+
+    function startAddSubGame() {
+      const addSubState = appState.addSub;
+      stopAddSubTimers();
+      addSubState.score = 0;
+      addSubState.currentIndex = -1;
+      addSubState.isLocked = true;
+      addSubState.isCountingDown = true;
+      updateAddSubHeader();
+      let count = 3;
+      addSubCountdown.textContent = count;
+      addSubCountdown.classList.add('show');
+      addSubQuestionCard.className = 'question-card';
+      addSubQuestionCard.innerHTML = '<div class="math-empty">เตรียมตัวให้พร้อม</div>';
+      addSubOptions.innerHTML = '';
+      addSubTimer.textContent = addSubState.totalTime > 0 ? formatAddSubTime(addSubState.totalTime) : 'เวลา: ไม่จับเวลา';
+
+      addSubState.countdownId = window.setInterval(() => {
+        count -= 1;
+        if (count > 0) {
+          addSubCountdown.textContent = count;
+          return;
+        }
+        if (count === 0) {
+          addSubCountdown.textContent = 'เริ่ม';
+          return;
+        }
+        window.clearInterval(addSubState.countdownId);
+        addSubState.countdownId = null;
+        addSubState.isCountingDown = false;
+        addSubCountdown.classList.remove('show');
+        if (addSubState.totalTime > 0) {
+          addSubState.timerLeft = addSubState.totalTime;
+          startAddSubOverallTimer();
+        }
+        showAddSubQuestion(0);
+      }, 700);
+    }
+
+    function formatAddSubTime(seconds) {
+      const safeSeconds = Math.max(seconds, 0);
+      const minutes = Math.floor(safeSeconds / 60);
+      const remain = safeSeconds % 60;
+      return `เวลา: ${minutes}:${String(remain).padStart(2, '0')}`;
+    }
+
+    function startAddSubOverallTimer() {
+      const addSubState = appState.addSub;
+      if (addSubState.timerId) {
+        window.clearInterval(addSubState.timerId);
+      }
+      addSubTimer.textContent = formatAddSubTime(addSubState.timerLeft);
+      addSubState.timerId = window.setInterval(() => {
+        addSubState.timerLeft -= 1;
+        addSubTimer.textContent = formatAddSubTime(addSubState.timerLeft);
+        if (addSubState.timerLeft > 0) {
+          return;
+        }
+        window.clearInterval(addSubState.timerId);
+        addSubState.timerId = null;
+        finishAddSubRound(true);
+      }, 1000);
+    }
+
+    function stopAddSubTimers() {
+      const addSubState = appState.addSub;
+      if (addSubState.timerId) {
+        window.clearInterval(addSubState.timerId);
+        addSubState.timerId = null;
+      }
+      if (addSubState.countdownId) {
+        window.clearInterval(addSubState.countdownId);
+        addSubState.countdownId = null;
+      }
+      addSubCountdown.classList.remove('show');
+    }
+
+    function showAddSubQuestion(index) {
+      const addSubState = appState.addSub;
+      const question = addSubState.round[index];
+      if (!question) {
+        finishAddSubRound(false);
+        return;
+      }
+
+      addSubState.currentIndex = index;
+      addSubState.isLocked = false;
+      updateAddSubHeader();
+      renderAddSubQuestion(question);
+    }
+
+    function renderAddSubQuestion(question) {
+      addSubQuestionCard.className = 'question-card';
+      addSubQuestionCard.innerHTML = `
+        <div class="question-meta">โจทย์บวกลบ</div>
+        <p class="math-question-text">${question.prompt}</p>
+      `;
+      addSubOptions.innerHTML = '';
+      question.options.forEach((option) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'option-button';
+        button.dataset.value = String(option.value);
+        button.innerHTML = `<span class="option-label">${option.label}</span>${option.value}`;
+        button.addEventListener('click', () => handleAddSubAnswer(option.value, button));
+        addSubOptions.appendChild(button);
+      });
+    }
+
+    function handleAddSubAnswer(selectedValue, buttonElement) {
+      const addSubState = appState.addSub;
+      if (addSubState.isLocked) {
+        return;
+      }
+      const question = addSubState.round[addSubState.currentIndex];
+      const isCorrect = Number(selectedValue) === Number(question.answer);
+      if (buttonElement) {
+        buttonElement.classList.add(isCorrect ? 'correct' : 'wrong');
+      }
+      lockAddSubQuestion(isCorrect);
+    }
+
+    function lockAddSubQuestion(isCorrect) {
+      const addSubState = appState.addSub;
+      const question = addSubState.round[addSubState.currentIndex];
+      if (addSubState.isLocked || !question) {
+        return;
+      }
+      addSubState.isLocked = true;
+      if (isCorrect) {
+        addSubState.score += 1;
+      }
+      Array.from(addSubOptions.querySelectorAll('button')).forEach((button) => {
+        button.disabled = true;
+        const buttonValue = Number(button.dataset.value);
+        if (buttonValue === Number(question.answer)) {
+          button.classList.add('correct');
+        }
+      });
+      addSubResultBanner.textContent = isCorrect ? `ถูกต้อง คำตอบคือ ${question.answer}` : `ยังไม่ถูก ข้อนี้คำตอบคือ ${question.answer}`;
+      addSubResultBanner.className = 'result-banner show';
+      updateAddSubHeader();
+      window.setTimeout(() => showAddSubQuestion(addSubState.currentIndex + 1), 1100);
+    }
+
+    function updateAddSubHeader() {
+      const addSubState = appState.addSub;
+      const currentDisplay = addSubState.currentIndex >= 0 ? Math.min(addSubState.currentIndex + 1, 10) : 0;
+      addSubProgress.textContent = `ข้อที่ ${currentDisplay} / 10`;
+      addSubScore.textContent = `คะแนน: ${addSubState.score}`;
+    }
+
+    function finishAddSubRound(fromTimeout) {
+      stopAddSubTimers();
+      const addSubState = appState.addSub;
+      addSubState.currentIndex = addSubState.round.length;
+      addSubState.isLocked = true;
+      updateAddSubHeader();
+      addSubTimer.textContent = fromTimeout ? 'เวลา: หมดเวลา' : 'เวลา: จบรอบ';
+      addSubQuestionCard.className = 'question-card';
+      addSubQuestionCard.innerHTML = `
+        <div class="question-meta">สรุปผล</div>
+        <p class="math-question-text">ตอบถูก ${addSubState.score} จาก ${addSubState.round.length} ข้อ</p>
+      `;
+      addSubOptions.innerHTML = '';
+      addSubResultBanner.textContent = addSubState.score === addSubState.round.length ? 'ยอดเยี่ยม ตอบถูกครบทุกข้อ' : 'กดเริ่มเกมเพื่อเล่นรอบใหม่ได้เลย';
+      addSubResultBanner.className = 'result-banner show';
+    }
+
     function renderDifficultyChoices() {
       const mathState = appState.math;
       difficultyChoices.innerHTML = '';
@@ -1226,6 +1588,11 @@
       if (screenName === 'math') {
         stopMathTimers();
         prepareMathRound();
+      }
+
+      if (screenName === 'addSub') {
+        stopAddSubTimers();
+        prepareAddSubRound();
       }
     }
 
@@ -1578,10 +1945,12 @@
 
     homeButton.addEventListener('click', () => {
       stopMathTimers();
+      stopAddSubTimers();
       switchScreen('home');
     });
     openFlagsGame.addEventListener('click', () => switchScreen('flags'));
     openMathGame.addEventListener('click', () => switchScreen('math'));
+    openAddSubGame.addEventListener('click', () => switchScreen('addSub'));
     chooseAseanButton.addEventListener('click', () => setFlagGroup('asean'));
     chooseWorldButton.addEventListener('click', () => setFlagGroup('world'));
     resetFlagsButton.addEventListener('click', startFlagRound);
@@ -1590,12 +1959,20 @@
       startMathGame();
     });
     resetMathButton.addEventListener('click', prepareMathRound);
+    startAddSubButton.addEventListener('click', () => {
+      prepareAddSubRound();
+      startAddSubGame();
+    });
+    resetAddSubButton.addEventListener('click', prepareAddSubRound);
 
     appState.math.banks = buildMathBanks();
     appState.math.bank = appState.math.banks[appState.math.selectedDifficulty];
     renderDifficultyChoices();
     renderTimeChoices();
     prepareMathRound();
+    appState.addSub.bank = buildAddSubBank(300);
+    renderAddSubTimeChoices();
+    prepareAddSubRound();
     switchScreen('home');
   </script>
 </body>
